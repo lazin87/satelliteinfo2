@@ -3,7 +3,8 @@ TEMPLATE = app
 QT += qml quick positioning
 
 SOURCES += main.cpp \
-    satelliteinfo.cpp
+    satelliteinfo.cpp \
+    cgpspositionprovider.cpp
 
 RESOURCES += qml.qrc
 
@@ -14,4 +15,5 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 HEADERS += \
-    satelliteinfo.h
+    satelliteinfo.h \
+    cgpspositionprovider.h
