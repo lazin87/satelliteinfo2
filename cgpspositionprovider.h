@@ -13,7 +13,7 @@ QT_FORWARD_DECLARE_CLASS (QTimer)
 class CGpsPositionProvider : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(double longitude READ longitude)
+    Q_PROPERTY(double longitude READ longitude NOTIFY positionChanged)
     Q_PROPERTY(double latitude READ latitude)
     Q_PROPERTY(double altitude READ altitude)
     Q_INTERFACES(QQmlParserStatus)
@@ -36,7 +36,7 @@ public:
     void componentComplete();
 
 signals:
-    void positionUpdated();
+    void positionChanged();
 
 private slots:
     void updatePosition(const QGeoPositionInfo & a_rGeoPosInfo);

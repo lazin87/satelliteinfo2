@@ -108,7 +108,7 @@ void CGpsPositionProvider::updatePosition(const QGeoPositionInfo &a_rGeoPosInfo)
         m_dLongitude = a_rGeoPosInfo.coordinate().longitude();
         m_dLatitude = a_rGeoPosInfo.coordinate().latitude();
 
-        //emit positionUpdated();
+        emit positionChanged();
     }
 }
 
@@ -124,6 +124,6 @@ void CGpsPositionProvider::generateDemoPosition()
                << "Long: " << m_dLongitude << " "
                << "Lat: " << m_dLatitude;
 
-    emit positionUpdated();
+    emit positionChanged();
 }
 
