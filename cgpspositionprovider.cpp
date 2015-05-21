@@ -8,7 +8,7 @@ CGpsPositionProvider::CGpsPositionProvider(QObject *a_pParent)
     , m_dLongitude(0.0)
     , m_dLatitude(0.0)
     , m_dAltitude(0.0)
-    , m_strSourceName("")
+    , m_strSoruceName("")
     , m_strPositioningMethod("")
     , m_pGeoPositionSrc(0)
 {
@@ -27,8 +27,9 @@ void CGpsPositionProvider::start()
         m_pGeoPositionSrc->setUpdateInterval(iUPDATE_INTERVAL_MS);
         m_pGeoPositionSrc->startUpdates();
 
-        connect( m_pGeoPositionSrc, SIGNAL(positionUpdated(QGeoPositionInfo)
-               , this, SLOT(updatePosition(QGeoPositionInfo) );
+        connect( m_pGeoPositionSrc, SIGNAL(positionUpdated(QGeoPositionInfo) )
+               , this, SLOT(updatePosition(QGeoPositionInfo) )
+               );
     }
     else
     {

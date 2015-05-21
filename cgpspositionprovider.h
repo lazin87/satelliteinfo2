@@ -6,7 +6,7 @@
 
 class QGeoPositionInfoSource;
 
-class CGpsPositionProvider : public QQmlParserStatus, QObject
+class CGpsPositionProvider : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)

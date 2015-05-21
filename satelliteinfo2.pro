@@ -1,7 +1,7 @@
 TEMPLATE = app
 
 QT += qml quick positioning
-
+CONFIG += c++11
 SOURCES += main.cpp \
     satelliteinfo.cpp \
     cgpspositionprovider.cpp
