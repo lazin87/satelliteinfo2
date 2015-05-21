@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Local 1.0
+import GpsPosProv 1.0
 
 Rectangle
 {
@@ -15,6 +16,16 @@ Rectangle
         anchors.top : parent.top
     }
 
+    Text
+    {
+        id: positionLabel
+        y: errorLabel.height + errorLabel.y + 5
+        font.pointSize: 8
+        text: qsTr("Long: %1, Lat: %2, Alt: %3").arg(positionProvider.longitude)
+                                                .arg(positionProvider.latitude)
+                                                .arg(positionProvider.altitude)
+    }
+
     SatelliteModel
     {
         id:satModel
@@ -22,9 +33,14 @@ Rectangle
         onErrorFound: errorLabel.text = qsTr("Last Error: %1", "%1=error number").arg(a_iCode)
     }
 
+    CGpsPositionProvider
+    {
+        id: positionProvider
+    }
+
     ListView
     {
-        y: 30
+        y: positionLabel.height + positionLabel.y + 5
         width: 200;
         height: 200;
         model: satModel
