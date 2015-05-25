@@ -4,7 +4,10 @@ QT += qml quick positioning
 CONFIG += c++11
 SOURCES += main.cpp \
     satelliteinfo.cpp \
-    cgpspositionprovider.cpp
+    cgpspositionprovider.cpp \
+    cpostionstorage.cpp \
+    cdata.cpp \
+    idatastorage.cpp
 
 RESOURCES += qml.qrc
 
@@ -16,4 +19,7 @@ include(deployment.pri)
 
 HEADERS += \
     satelliteinfo.h \
-    cgpspositionprovider.h
+    cgpspositionprovider.h \
+    cpostionstorage.h \
+    cdata.h \
+    idatastorage.h
