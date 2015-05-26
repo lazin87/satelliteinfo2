@@ -7,7 +7,8 @@ SOURCES += main.cpp \
     cgpspositionprovider.cpp \
     cdata.cpp \
     idatastorage.cpp \
-    cgpsdatastorage.cpp
+    cgpsdatastorage.cpp \
+    idata.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,4 +23,5 @@ HEADERS += \
     cgpspositionprovider.h \
     cdata.h \
     idatastorage.h \
-    cgpsdatastorage.h
+    cgpsdatastorage.h \
+    idata.h
