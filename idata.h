@@ -1,16 +1,18 @@
 #ifndef IDATA_H
 #define IDATA_H
 
+#include <QVector>
 
 class IData
 {
 public:
     IData();
-    ~IData();
+    virtual ~IData();
 
-    virtual bool set() = 0;
+    virtual bool set(QVector<double>::iterator a_iterBegin, QVector<double>::iterator a_iterEnd);
     virtual QString toString() = 0;
     virtual QString columnName(int a_iRow) const = 0;
+    virtual bool get(int a_iRow, void * a_outVal) const = 0;
 };
 
 #endif // IDATA_H

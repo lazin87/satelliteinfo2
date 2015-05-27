@@ -15,10 +15,10 @@ CGpsDataStorage::~CGpsDataStorage()
 
 
 
-bool CGpsDataStorage::commitData(int a_iDataTypeId, double a_dData)
+bool CGpsDataStorage::commitData(IData const * a_cpData)
 {
     bool fResult = false;
-
+/*
     if( (0 <= a_iDataTypeId) && (GPS_DATA_COUNT > a_iDataTypeId) )
     {
         fResult = true;
@@ -27,18 +27,25 @@ bool CGpsDataStorage::commitData(int a_iDataTypeId, double a_dData)
 
         m_eStatus = DS_STS_UNEMPTY;
     }
-
+*/
     return fResult;
 }
 
 bool CGpsDataStorage::pushData()
 {
+    bool fReturn = false;
+
+    return fReturn;
 }
 
-bool CGpsDataStorage::pullData(CData &a_rOutData)
+bool CGpsDataStorage::pullData(IData * a_pOutData)
 {
+    bool fReturn = false;
+
+    return fReturn;
 }
 
 IDataStorage::EDataStorageStatusCode CGpsDataStorage::status() const
 {
+    return DS_STS_EMPTY;
 }

@@ -1,7 +1,7 @@
 #ifndef IDATASTORAGE_H
 #define IDATASTORAGE_H
 
-#include <cdata.h>
+#include "idata.h"
 
 class IDataStorage
 {
@@ -15,11 +15,9 @@ public:
     IDataStorage();
     virtual ~IDataStorage();
 
-    virtual bool commitData(int a_iDataTypeId, QString a_strData);
-    virtual bool commitData(int a_iDataTypeId, int a_iData);
-    virtual bool commitData(int a_iDataTypeId, double a_dData);
+    virtual bool commitData(IData const * a_cpData) = 0;
     virtual bool pushData() = 0;
-    virtual bool pullData(CData & a_rOutData) = 0;
+    virtual bool pullData(IData * a_pOutData) = 0;
     virtual EDataStorageStatusCode status() const = 0;
 };
 

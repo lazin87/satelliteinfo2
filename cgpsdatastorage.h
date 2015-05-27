@@ -23,9 +23,9 @@ public:
 
     // IDataStorage interface
 public:
-    virtual bool commitData(int a_iDataTypeId, double a_dData);
+    virtual bool commitData(IData const * a_cpData);
     virtual bool pushData();
-    virtual bool pullData(CData &a_rOutData);
+    virtual bool pullData(IData * a_pOutData);
     virtual EDataStorageStatusCode status() const;
 
 signals:
@@ -33,9 +33,9 @@ signals:
 public slots:
 
 private:
-    QString m_astrKeys[GPS_DATA_COUNT] = {"LONGITUDE", "LATITUDE", "ALTITIUDE"};
-    double m_adValues[GPS_DATA_COUNT] = {0};
-    QVector <double [GPS_DATA_COUNT]> dupa;
+   // QString m_astrKeys[GPS_DATA_COUNT] = {"LONGITUDE", "LATITUDE", "ALTITIUDE"};
+    double m_adValues[GPS_DATA_COUNT];// = {0};
+    //QVector <double [GPS_DATA_COUNT]> dupa;
 
     EDataStorageStatusCode m_eStatus;
 };
