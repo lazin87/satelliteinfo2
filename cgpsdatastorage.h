@@ -2,21 +2,15 @@
 #define CGPSDATASTORAGE_H
 
 #include <QObject>
+#include <QVector>
 
-#include "idatastorage.h"
+#include "ilocaldatastorage.h"
+#include "cgpspositiondata.h"
 
-class CGpsDataStorage : public QObject, public IDataStorage
+class CGpsDataStorage : public QObject, public ILocalDataStorage
 {
     Q_OBJECT
 public:
-    enum EGpsDataType
-    {
-        LONGITUDE = 0,
-        LATITUDE = 1,
-        ALTITIUDE = 2,
-
-        GPS_DATA_COUNT = 3
-    };
 
     explicit CGpsDataStorage(QObject *parent = 0);
     ~CGpsDataStorage();
@@ -24,8 +18,8 @@ public:
     // IDataStorage interface
 public:
     virtual bool commitData(IData const * a_cpData);
-    virtual bool pushData();
-    virtual bool pullData(IData * a_pOutData);
+    virtual bool pushData(IRemoteDataStorage const & m_crRemoteDataStorage);
+    virtual bool pullData(IRemoteDataStorage const & m_crRemoteDataStorage);
     virtual EDataStorageStatusCode status() const;
 
 signals:
@@ -33,11 +27,8 @@ signals:
 public slots:
 
 private:
-   // QString m_astrKeys[GPS_DATA_COUNT] = {"LONGITUDE", "LATITUDE", "ALTITIUDE"};
-    double m_adValues[GPS_DATA_COUNT];// = {0};
-    //QVector <double [GPS_DATA_COUNT]> dupa;
-
     EDataStorageStatusCode m_eStatus;
+    QVector<CGpsPositionData> m_vDataStorage;
 };
 
 #endif // CGPSDATASTORAGE_H

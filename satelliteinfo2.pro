@@ -5,10 +5,12 @@ CONFIG += c++11
 SOURCES += main.cpp \
     satelliteinfo.cpp \
     cgpspositionprovider.cpp \
-    idatastorage.cpp \
     cgpsdatastorage.cpp \
     idata.cpp \
-    cgpspositiondata.cpp
+    cgpspositiondata.cpp \
+    tests.cpp \
+    iremotedatastorage.cpp \
+    ilocaldatastorage.cpp
 
 RESOURCES += qml.qrc
 
@@ -21,7 +23,8 @@ include(deployment.pri)
 HEADERS += \
     satelliteinfo.h \
     cgpspositionprovider.h \
-    idatastorage.h \
     cgpsdatastorage.h \
     idata.h \
-    cgpspositiondata.h
+    cgpspositiondata.h \
+    iremotedatastorage.h \
+    ilocaldatastorage.h

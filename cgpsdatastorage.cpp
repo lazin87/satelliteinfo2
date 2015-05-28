@@ -2,7 +2,7 @@
 
 CGpsDataStorage::CGpsDataStorage(QObject *parent)
     : QObject(parent)
-    , IDataStorage()
+    , ILocalDataStorage()
     , m_eStatus(DS_STS_EMPTY)
 {
 
@@ -18,34 +18,32 @@ CGpsDataStorage::~CGpsDataStorage()
 bool CGpsDataStorage::commitData(IData const * a_cpData)
 {
     bool fResult = false;
-/*
-    if( (0 <= a_iDataTypeId) && (GPS_DATA_COUNT > a_iDataTypeId) )
+
+    if(0 != a_cpData)
     {
-        fResult = true;
-
-        m_adValues[a_iDataTypeId] = a_dData;
-
-        m_eStatus = DS_STS_UNEMPTY;
+        const CGpsPositionData * pData = dynamic_cast<const CGpsPositionData *>(a_cpData);
+        m_vDataStorage.push_back(*pData);
+        m_eStatus = DS_STS_DATA_ARE_COMMITED;
     }
-*/
+
     return fResult;
 }
 
-bool CGpsDataStorage::pushData()
+bool CGpsDataStorage::pushData(IRemoteDataStorage const & m_crRemoteDataStorage)
 {
     bool fReturn = false;
 
     return fReturn;
 }
 
-bool CGpsDataStorage::pullData(IData * a_pOutData)
+bool CGpsDataStorage::pullData(const IRemoteDataStorage &m_crRemoteDataStorage)
 {
     bool fReturn = false;
 
     return fReturn;
 }
 
-IDataStorage::EDataStorageStatusCode CGpsDataStorage::status() const
+ILocalDataStorage::EDataStorageStatusCode CGpsDataStorage::status() const
 {
     return DS_STS_EMPTY;
 }

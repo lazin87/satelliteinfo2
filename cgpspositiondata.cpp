@@ -60,7 +60,7 @@ bool CGpsPositionData::get(int a_iRow, void * a_outVal) const
 
     if( (0 <= a_iRow) && (GPS_DATA_COUNT > a_iRow) && (0 != a_outVal) )
     {
-        double * outVal = static_cast<double *>(a_outVal);
+        double * outVal = reinterpret_cast<double *>(a_outVal);
         *outVal = m_aData[a_iRow]; // TO CHECK
         fResult = true;
     }
