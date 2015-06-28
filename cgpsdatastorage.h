@@ -20,15 +20,15 @@ public:
     virtual bool commitData(IData const * a_cpData);
     virtual bool pushData(IRemoteDataStorage const & m_crRemoteDataStorage);
     virtual bool pullData(IRemoteDataStorage const & m_crRemoteDataStorage);
-    virtual EDataStorageStatusCode status() const;
+    virtual ELocalDataStorageSts status() const;
 
 signals:
 
 public slots:
 
 private:
-    EDataStorageStatusCode m_eStatus;
-    QVector<CGpsPositionData> m_vDataStorage;
+    ELocalDataStorageSts m_eStatus;
+    QVector<CGpsPositionData> m_aLocalDataStorage;
 };
 
 #endif // CGPSDATASTORAGE_H

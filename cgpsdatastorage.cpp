@@ -22,8 +22,10 @@ bool CGpsDataStorage::commitData(IData const * a_cpData)
     if(0 != a_cpData)
     {
         const CGpsPositionData * pData = dynamic_cast<const CGpsPositionData *>(a_cpData);
-        m_vDataStorage.push_back(*pData);
+        m_aLocalDataStorage.push_back(*pData);
         m_eStatus = DS_STS_DATA_ARE_COMMITED;
+
+        fResult = true;
     }
 
     return fResult;
@@ -43,7 +45,7 @@ bool CGpsDataStorage::pullData(const IRemoteDataStorage &m_crRemoteDataStorage)
     return fReturn;
 }
 
-ILocalDataStorage::EDataStorageStatusCode CGpsDataStorage::status() const
+ILocalDataStorage::ELocalDataStorageSts CGpsDataStorage::status() const
 {
     return DS_STS_EMPTY;
 }

@@ -22,8 +22,8 @@ public:
     // IData interface
     virtual bool set(QVector<double>::iterator a_iterBegin, QVector<double>::iterator a_iterEnd);
     virtual QString toString();
-    virtual QString columnName(int a_iRow) const;
-    virtual bool get(int a_iRow, void *a_outVal) const;
+    virtual QString columnName(int a_iColumn) const;
+    virtual bool get(int a_iColumn, double & a_rdOutVal) const;
 
 private:
     static const QString s_astrCOLUMNS_NAMES[GPS_DATA_COUNT];// = {"LONGITUDE", "LATITUDE", "ALTITIUDE"};

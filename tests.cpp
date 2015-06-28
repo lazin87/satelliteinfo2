@@ -21,8 +21,7 @@ void unittest_CGpsPositionData()
     for(int i = -1; CGpsPositionData::GPS_DATA_COUNT >= i; ++i)
     {
         double val;
-        void * pval = reinterpret_cast<void *>(&val);
-        if(data.get(i, pval) )
+        if(data.get(i, val) )
         {
             qWarning() << " " << val;
         }
