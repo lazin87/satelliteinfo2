@@ -20,6 +20,7 @@ void CSqlDataStorage::pull(IData *a_pOutData)
 {
 }
 
-ERemoteDataStorageStatus CSqlDataStorage::status() const
+IRemoteDataStorage::ERemoteDataStorageSts CSqlDataStorage::status() const
 {
+    return RDSSts_INVALID;
 }

@@ -10,14 +10,15 @@ class IRemoteDataStorage
 public:
     enum ERemoteDataStorageSts
     {
-        RDSSts_OK = 0
+        RDSSts_OK = 0,
+        RDSSts_INVALID = 1
     };
 
     IRemoteDataStorage();
     virtual ~IRemoteDataStorage();
 
-    virtual void push(IData const & a_crData) = 0;
-    virtual void pull(IData *a_pOutData) = 0;
+    virtual void push(QVector<IData> const & a_crData) = 0;
+    virtual void pull(QVector<IData> & a_rData) = 0;
 
     virtual ERemoteDataStorageSts status() const = 0;
 };
