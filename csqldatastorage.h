@@ -3,6 +3,9 @@
 
 #include "iremotedatastorage.h"
 
+#include <QtSql>
+
+
 class CSqlDataStorage : public IRemoteDataStorage
 {
 public:
@@ -11,9 +14,10 @@ public:
 
     // IRemoteDataStorage interface
 public:
-    virtual void push(const IData &a_crData);
-    virtual void pull(IData *a_pOutData);
+    virtual void push(QVector<IData> const & a_crData);
+    virtual void pull(QVector<IData> & a_rData);
     virtual ERemoteDataStorageSts status() const;
+
 };
 
 #endif // CSQLDATASTORAGE_H

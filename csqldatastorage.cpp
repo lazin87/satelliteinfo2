@@ -12,11 +12,11 @@ CSqlDataStorage::~CSqlDataStorage()
 
 
 
-void CSqlDataStorage::push(const IData &a_crData)
+void CSqlDataStorage::push(const QVector<IData> &a_crData)
 {
 }
 
-void CSqlDataStorage::pull(IData *a_pOutData)
+void CSqlDataStorage::pull(QVector<IData> &a_rData)
 {
 }
 

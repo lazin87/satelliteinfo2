@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick positioning
+QT += qml quick positioning sql
 CONFIG += c++11
 SOURCES += main.cpp \
     satelliteinfo.cpp \
