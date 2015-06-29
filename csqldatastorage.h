@@ -18,6 +18,8 @@ public:
     virtual void pull(QVector<IData> & a_rData);
     virtual ERemoteDataStorageSts status() const;
 
+private:
+    QSqlDatabase m_oSqlDatabase;
 };
 
 #endif // CSQLDATASTORAGE_H
