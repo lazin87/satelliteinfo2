@@ -11,7 +11,7 @@ SOURCES += main.cpp \
     tests.cpp \
     iremotedatastorage.cpp \
     ilocaldatastorage.cpp \
-    csqldatastorage.cpp
+    chttpdatastorage.cpp
 
 RESOURCES += qml.qrc
 
@@ -29,4 +29,4 @@ HEADERS += \
     cgpspositiondata.h \
     iremotedatastorage.h \
     ilocaldatastorage.h \
-    csqldatastorage.h
+    chttpdatastorage.h

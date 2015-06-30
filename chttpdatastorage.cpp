@@ -1,4 +1,4 @@
-#include "csqldatastorage.h"
+#include "chttpdatastorage.h"
 #include <QDebug>
 
 CHttpDataStorage::CHttpDataStorage()

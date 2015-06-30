@@ -1,5 +1,5 @@
 #include "cgpspositiondata.h"
-#include "csqldatastorage.h"
+#include "chttpdatastorage.h"
 
 #include <QDebug>
 
