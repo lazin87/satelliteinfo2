@@ -2,11 +2,14 @@
 #define IREMOTEDATASTORAGE_H
 
 #include <QString>
+#include <QObject>
 
 class IData;
 
-class IRemoteDataStorage
+class IRemoteDataStorage : public QObject
 {
+    Q_OBJECT
+
 public:
     enum ERemoteDataStorageSts
     {
@@ -14,7 +17,7 @@ public:
         RDSSts_INVALID = 1
     };
 
-    IRemoteDataStorage();
+    IRemoteDataStorage(QObject *a_pParent = 0);
     virtual ~IRemoteDataStorage();
 
     virtual void push(QVector<IData> const & a_crData) = 0;

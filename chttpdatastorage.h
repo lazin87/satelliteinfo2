@@ -1,14 +1,15 @@
 #ifndef CSQLDATASTORAGE_H
 #define CSQLDATASTORAGE_H
 
+
 #include "iremotedatastorage.h"
+#include "chttpbrowser.h"
 
 
 class CHttpDataStorage : public IRemoteDataStorage
 {
 public:
-
-    CHttpDataStorage();
+    CHttpDataStorage(QObject * a_pParent = 0);
 
     ~CHttpDataStorage();
 
@@ -16,10 +17,11 @@ public:
 public:
     virtual void push(QVector<IData> const & a_crData);
     virtual void pull(QVector<IData> & a_rData);
-    virtual ERemoteDataStorageSts status() const;
+    virtual IRemoteDataStorage::ERemoteDataStorageSts status() const;
 
 private:
-    ERemoteDataStorageSts m_eDataStorageSts;
+    IRemoteDataStorage::ERemoteDataStorageSts m_eDataStorageSts;
+    CHttpBrowser m_oHttpBrowser;
 };
 
 #endif // CSQLDATASTORAGE_H

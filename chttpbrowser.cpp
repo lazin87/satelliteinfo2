@@ -15,13 +15,11 @@ CHttpBrowser::CHttpBrowser(QObject *a_pParent)
     , m_pReplay(0)
     , m_pFile(0)
 {
-    qDebug("ctor");
     m_pNetworkAccessMngr = new QNetworkAccessManager(this);
 }
 
 CHttpBrowser::~CHttpBrowser()
 {
-    qDebug("dest");
 }
 
 bool CHttpBrowser::startGetRequest()

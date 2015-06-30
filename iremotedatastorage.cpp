@@ -1,6 +1,6 @@
 #include "iremotedatastorage.h"
 
-IRemoteDataStorage::IRemoteDataStorage()
+IRemoteDataStorage::IRemoteDataStorage(QObject *a_pParent)
 {
 
 }

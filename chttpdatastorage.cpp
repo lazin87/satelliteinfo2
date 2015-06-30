@@ -1,8 +1,10 @@
 #include "chttpdatastorage.h"
 #include <QDebug>
 
-CHttpDataStorage::CHttpDataStorage()
-    : m_eDataStorageSts(RDSSts_INVALID)
+CHttpDataStorage::CHttpDataStorage(QObject *a_pParent)
+    : IRemoteDataStorage(a_pParent),
+      m_eDataStorageSts(RDSSts_INVALID),
+      m_oHttpBrowser(this)
 {
 }
 
