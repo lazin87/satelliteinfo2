@@ -10,7 +10,7 @@ class IRemoteDataStorage
 public:
     enum ERemoteDataStorageSts
     {
-        RDSSts_OK = 0,
+        RDSSts_Ready = 0,
         RDSSts_INVALID = 1
     };
 

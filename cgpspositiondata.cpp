@@ -1,6 +1,7 @@
 #include "cgpspositiondata.h"
 
 const QString CGpsPositionData::s_astrCOLUMNS_NAMES[CGpsPositionData::GPS_DATA_COUNT] = {
+    "TIMESTAMP",
     "LONGITUDE",
     "LATITUDE",
     "ALTITIUDE" };

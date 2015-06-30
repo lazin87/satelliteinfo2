@@ -14,7 +14,12 @@
 
 int main(int argc, char *argv[])
 {
+    QGuiApplication app(argc, argv);
+
     unittest_CGpsPositionData();
+    unittest_CSqlDataStorage();
+
+    return app.exec();
 
     /*
     QGuiApplication app(argc, argv);

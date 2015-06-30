@@ -1,4 +1,6 @@
 #include "cgpspositiondata.h"
+#include "csqldatastorage.h"
+
 #include <QDebug>
 
 void unittest_CGpsPositionData()
@@ -8,14 +10,16 @@ void unittest_CGpsPositionData()
     test_data.append(1.2);
     test_data.append(1.3);
     test_data.append(1.4);
+    test_data.append(1.5);
 
     data.set(test_data.begin(), test_data.end() );
     qWarning() << data.toString();
     qWarning() << "Columns names:"
+               << " " << data.columnName(CGpsPositionData::TIMESTAMP)
                << " " << data.columnName(CGpsPositionData::LONGITUDE)
                << " " << data.columnName(CGpsPositionData::ALTITIUDE)
                << " " << data.columnName(CGpsPositionData::LATITUDE)
-               << " " << data.columnName(4)
+               << " " << data.columnName(5)
                << " " << data.columnName(-1);
     qWarning() << "Values:";
     for(int i = -1; CGpsPositionData::GPS_DATA_COUNT >= i; ++i)
@@ -26,4 +30,10 @@ void unittest_CGpsPositionData()
             qWarning() << " " << val;
         }
     }
+}
+
+void unittest_CSqlDataStorage()
+{
+    CHttpDataStorage oSqlDataStorage();
+
 }

@@ -1,26 +1,27 @@
 #include "csqldatastorage.h"
+#include <QDebug>
 
-CSqlDataStorage::CSqlDataStorage()
+CHttpDataStorage::CHttpDataStorage()
+    : m_eDataStorageSts(RDSSts_INVALID)
+{
+}
+
+CHttpDataStorage::~CHttpDataStorage()
 {
 
 }
 
-CSqlDataStorage::~CSqlDataStorage()
-{
-
-}
 
 
-
-void CSqlDataStorage::push(const QVector<IData> &a_crData)
+void CHttpDataStorage::push(const QVector<IData> &a_crData)
 {
 }
 
-void CSqlDataStorage::pull(QVector<IData> &a_rData)
+void CHttpDataStorage::pull(QVector<IData> &a_rData)
 {
 }
 
-IRemoteDataStorage::ERemoteDataStorageSts CSqlDataStorage::status() const
+IRemoteDataStorage::ERemoteDataStorageSts CHttpDataStorage::status() const
 {
     return RDSSts_INVALID;
 }

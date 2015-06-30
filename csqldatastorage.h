@@ -3,14 +3,14 @@
 
 #include "iremotedatastorage.h"
 
-#include <QtSql>
 
-
-class CSqlDataStorage : public IRemoteDataStorage
+class CHttpDataStorage : public IRemoteDataStorage
 {
 public:
-    CSqlDataStorage();
-    ~CSqlDataStorage();
+
+    CHttpDataStorage();
+
+    ~CHttpDataStorage();
 
     // IRemoteDataStorage interface
 public:
@@ -19,7 +19,7 @@ public:
     virtual ERemoteDataStorageSts status() const;
 
 private:
-    QSqlDatabase m_oSqlDatabase;
+    ERemoteDataStorageSts m_eDataStorageSts;
 };
 
 #endif // CSQLDATASTORAGE_H

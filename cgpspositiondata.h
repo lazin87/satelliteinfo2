@@ -9,11 +9,12 @@ class CGpsPositionData : public IData
 public:
     enum EGpsDataType
     {
-        LONGITUDE = 0,
-        LATITUDE = 1,
-        ALTITIUDE = 2,
+        TIMESTAMP = 0,
+        LONGITUDE = 1,
+        LATITUDE = 2,
+        ALTITIUDE = 3,
 
-        GPS_DATA_COUNT = 3
+        GPS_DATA_COUNT
     };
 
     CGpsPositionData();
@@ -26,7 +27,7 @@ public:
     virtual bool get(int a_iColumn, double & a_rdOutVal) const;
 
 private:
-    static const QString s_astrCOLUMNS_NAMES[GPS_DATA_COUNT];// = {"LONGITUDE", "LATITUDE", "ALTITIUDE"};
+    static const QString s_astrCOLUMNS_NAMES[GPS_DATA_COUNT];// = {"TIMESTAMP", "LONGITUDE", "LATITUDE", "ALTITIUDE"};
     double m_aData[GPS_DATA_COUNT];// = {0};
 };
 
