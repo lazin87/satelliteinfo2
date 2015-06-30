@@ -58,15 +58,12 @@ QString CGpsPositionData::columnName(int a_iColumn) const
     return strOut;
 }
 
-bool CGpsPositionData::get(int a_iColumn, double & a_rdOutVal) const
+double CGpsPositionData::get(int a_iColumn) const
 {
-    bool fResult = false;
+    return m_aData[a_iColumn];
+}
 
-    if( (0 <= a_iColumn) && (GPS_DATA_COUNT > a_iColumn) )
-    {
-        a_rdOutVal = m_aData[a_iColumn];
-        fResult = true;
-    }
-
-    return fResult;
+int CGpsPositionData::count() const
+{
+    return static_cast<int>(GPS_DATA_COUNT);
 }

@@ -22,18 +22,27 @@ void unittest_CGpsPositionData()
                << " " << data.columnName(5)
                << " " << data.columnName(-1);
     qWarning() << "Values:";
-    for(int i = -1; CGpsPositionData::GPS_DATA_COUNT >= i; ++i)
+    for(int i = 0; CGpsPositionData::GPS_DATA_COUNT > i; ++i)
     {
-        double val;
-        if(data.get(i, val) )
-        {
-            qWarning() << " " << val;
-        }
+        double val = data.get(i);
+        qWarning() << " " << val;
     }
 }
 
 void unittest_CSqlDataStorage()
 {
-    CHttpDataStorage oSqlDataStorage();
+    CHttpDataStorage oHttpDataStorage;
+    std::unique_ptr<IData> ptrData(new CGpsPositionData);
 
+    QVector<double> test_data;
+    test_data.append(1.2);
+    test_data.append(1.3);
+    test_data.append(1.4);
+    test_data.append(1.5);
+
+    ptrData->set(test_data.begin(), test_data.end() );
+
+    oHttpDataStorage.push(ptrData);
+
+    while(1);
 }

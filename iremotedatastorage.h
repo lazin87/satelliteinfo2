@@ -1,10 +1,12 @@
 #ifndef IREMOTEDATASTORAGE_H
 #define IREMOTEDATASTORAGE_H
 
+#include "idata.h"
+
 #include <QString>
 #include <QObject>
+#include <memory>
 
-class IData;
 
 class IRemoteDataStorage : public QObject
 {
@@ -20,7 +22,7 @@ public:
     IRemoteDataStorage(QObject *a_pParent = 0);
     virtual ~IRemoteDataStorage();
 
-    virtual void push(QVector<IData> const & a_crData) = 0;
+    virtual void push(std::unique_ptr<IData> const & a_crData) = 0;
     virtual void pull(QVector<IData> & a_rData) = 0;
 
     virtual ERemoteDataStorageSts status() const = 0;

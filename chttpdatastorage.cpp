@@ -15,8 +15,18 @@ CHttpDataStorage::~CHttpDataStorage()
 
 
 
-void CHttpDataStorage::push(const QVector<IData> &a_crData)
+void CHttpDataStorage::push(const std::unique_ptr<IData> &a_crData)
 {
+    PostParamsList_t postParamList;
+    const int iCOLUMN_COUNT = a_crData->count();
+
+    for(int i = 0; iCOLUMN_COUNT > i; ++i)
+    {
+        PostParam_t postParam( a_crData->columnName(i), QString::number(a_crData->get(i) ) );
+        postParamList.append(postParam);
+    }
+
+    m_oHttpBrowser.submitForm(strTARGET_URL, postParamList);
 }
 
 void CHttpDataStorage::pull(QVector<IData> &a_rData)

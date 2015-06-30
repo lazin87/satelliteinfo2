@@ -30,12 +30,11 @@ bool IData::set(QVector<double>::iterator a_itrBegin, QVector<double>::iterator 
     return false;
 }
 
-bool IData::get(int a_iColumn, double &a_rdOutVal) const
+double IData::get(int a_iColumn) const
 {
     Q_UNUSED(a_iColumn)
-    Q_UNUSED(a_rdOutVal)
 
     qWarning() << "IData::get() should be overriden!";
-    return false;
+    return -1.0;
 }
 

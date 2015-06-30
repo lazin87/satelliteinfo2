@@ -13,10 +13,11 @@ public:
     virtual bool set(QVector<double>::iterator a_itrBegin, QVector<double>::iterator a_itrEnd);
 
     // return true if output value is valid, otherwise false
-    virtual bool get(int a_iColumn, double & a_rdOutVal) const; // przerobic getowanie na iRow z double
+    virtual double get(int a_iColumn) const; // przerobic getowanie na iRow z double
 
     virtual QString toString() = 0;
     virtual QString columnName(int a_iRow) const = 0;
+    virtual int count() const = 0;
 
 };
 

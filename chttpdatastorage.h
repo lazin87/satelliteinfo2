@@ -15,13 +15,15 @@ public:
 
     // IRemoteDataStorage interface
 public:
-    virtual void push(QVector<IData> const & a_crData);
+    virtual void push(std::unique_ptr<IData> const & a_crData);
     virtual void pull(QVector<IData> & a_rData);
-    virtual IRemoteDataStorage::ERemoteDataStorageSts status() const;
+    virtual ERemoteDataStorageSts status() const;
 
 private:
-    IRemoteDataStorage::ERemoteDataStorageSts m_eDataStorageSts;
+    ERemoteDataStorageSts m_eDataStorageSts;
     CHttpBrowser m_oHttpBrowser;
+
+    const QString strTARGET_URL = "http://lazinski.pl/QtTest/includes/addRow.php";
 };
 
 #endif // CSQLDATASTORAGE_H

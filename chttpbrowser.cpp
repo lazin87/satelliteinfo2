@@ -52,9 +52,14 @@ bool CHttpBrowser::startPostRequest()//QUrl a_postUrl, const PostParamsList_t &a
 
         m_pReplay = m_pNetworkAccessMngr->post(request, m_postParamsList.toString(QUrl::FullyEncoded).toUtf8() );
 
+//        connect( m_pReplay, SIGNAL(finished() )
+//                 , this, SLOT(downloadPostFinished() )
+//                 );
+
         connect( m_pReplay, SIGNAL(finished() )
-                 , this, SLOT(downloadPostFinished() )
+                 , this, SLOT(downloadFinished() )
                  );
+
         connect( m_pReplay, SIGNAL(readyRead() )
                  , this, SLOT(dataReadyToRead() )
                  );
@@ -71,9 +76,12 @@ void CHttpBrowser::setPostParams(const PostParamsList_t &a_ParamsList)
         qDebug("Params list cleared()");
         m_postParamsList.clear();
     }
-
+    qDebug() << "Params:";
     foreach(PostParam_t param, a_ParamsList)
     {
+        qDebug() << "First: " << param.first
+                 << "Second: " << param.second;
+
         m_postParamsList.addQueryItem(param.first, param.second);
     }
 }
