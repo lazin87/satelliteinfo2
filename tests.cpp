@@ -50,7 +50,6 @@ void unittest_CSqlDataStorage()
 
 void unittest_CHttpBrowser()
 {
-
     const QString urlPost = "http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi";
     PostParamsList_t params;
     params.append(qMakePair(QString("box"), QString("yes") ) );

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 
     unittest_CGpsPositionData();
     unittest_CSqlDataStorage();
-  //  unittest_CHttpBrowser();
+    unittest_CHttpBrowser();
 
     return app.exec();
 
