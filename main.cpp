@@ -11,13 +11,13 @@
 
 #include "tests.cpp"
 
-
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     unittest_CGpsPositionData();
     unittest_CSqlDataStorage();
+  //  unittest_CHttpBrowser();
 
     return app.exec();
 

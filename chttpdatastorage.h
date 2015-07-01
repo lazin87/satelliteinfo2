@@ -9,7 +9,9 @@
 class CHttpDataStorage : public IRemoteDataStorage
 {
 public:
-    CHttpDataStorage(QObject * a_pParent = 0);
+    const QString strTARGET_URL = "http://lazinski.pl/QtTest/includes/addRow.php";
+
+    CHttpDataStorage(CHttpBrowser & a_rHttpBrowser);
 
     ~CHttpDataStorage();
 
@@ -21,9 +23,7 @@ public:
 
 private:
     ERemoteDataStorageSts m_eDataStorageSts;
-    CHttpBrowser m_oHttpBrowser;
-
-    const QString strTARGET_URL = "http://lazinski.pl/QtTest/includes/addRow.php";
+    CHttpBrowser * m_pHttpBrowser;
 };
 
 #endif // CSQLDATASTORAGE_H

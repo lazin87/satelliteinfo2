@@ -1,10 +1,10 @@
 #include "chttpdatastorage.h"
 #include <QDebug>
 
-CHttpDataStorage::CHttpDataStorage(QObject *a_pParent)
-    : IRemoteDataStorage(a_pParent),
+CHttpDataStorage::CHttpDataStorage(CHttpBrowser & a_rHttpBrowser)
+    : IRemoteDataStorage(),
       m_eDataStorageSts(RDSSts_INVALID),
-      m_oHttpBrowser(this)
+      m_pHttpBrowser(&a_rHttpBrowser)
 {
 }
 
@@ -26,7 +26,7 @@ void CHttpDataStorage::push(const std::unique_ptr<IData> &a_crData)
         postParamList.append(postParam);
     }
 
-    m_oHttpBrowser.submitForm(strTARGET_URL, postParamList);
+    m_pHttpBrowser->submitForm(strTARGET_URL, postParamList);
 }
 
 void CHttpDataStorage::pull(QVector<IData> &a_rData)

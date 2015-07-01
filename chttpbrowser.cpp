@@ -20,6 +20,7 @@ CHttpBrowser::CHttpBrowser(QObject *a_pParent)
 
 CHttpBrowser::~CHttpBrowser()
 {
+    qDebug() << "destruct";
 }
 
 bool CHttpBrowser::startGetRequest()

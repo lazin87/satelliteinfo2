@@ -4,13 +4,11 @@
 #include "idata.h"
 
 #include <QString>
-#include <QObject>
 #include <memory>
 
 
-class IRemoteDataStorage : public QObject
+class IRemoteDataStorage
 {
-    Q_OBJECT
 
 public:
     enum ERemoteDataStorageSts
@@ -19,7 +17,7 @@ public:
         RDSSts_INVALID = 1
     };
 
-    IRemoteDataStorage(QObject *a_pParent = 0);
+    IRemoteDataStorage();
     virtual ~IRemoteDataStorage();
 
     virtual void push(std::unique_ptr<IData> const & a_crData) = 0;

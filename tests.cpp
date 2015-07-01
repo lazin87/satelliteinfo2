@@ -1,5 +1,6 @@
 #include "cgpspositiondata.h"
 #include "chttpdatastorage.h"
+#include "chttpbrowser.h"
 
 #include <QDebug>
 
@@ -29,9 +30,11 @@ void unittest_CGpsPositionData()
     }
 }
 
+CHttpBrowser oHttpBrowser; // MUSI
+
 void unittest_CSqlDataStorage()
 {
-    CHttpDataStorage oHttpDataStorage;
+    CHttpDataStorage oHttpDataStorage(oHttpBrowser);
     std::unique_ptr<IData> ptrData(new CGpsPositionData);
 
     QVector<double> test_data;
@@ -43,6 +46,16 @@ void unittest_CSqlDataStorage()
     ptrData->set(test_data.begin(), test_data.end() );
 
     oHttpDataStorage.push(ptrData);
+}
 
-    while(1);
+void unittest_CHttpBrowser()
+{
+
+    const QString urlPost = "http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi";
+    PostParamsList_t params;
+    params.append(qMakePair(QString("box"), QString("yes") ) );
+    params.append(qMakePair(QString("hidden field"), QString("hidden test") ) );
+    params.append(qMakePair(QString("Comments"), QString("to sa komentarze") ) );
+    oHttpBrowser.submitForm(urlPost, params);
+
 }
