@@ -26,6 +26,7 @@ bool CGpsPositionData::set(int a_iColumn, double a_dVal)
         m_aData[a_iColumn] = a_dVal;
         fResult = true;
     }
+
     return fResult;
 }
 
