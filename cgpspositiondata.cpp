@@ -17,6 +17,18 @@ CGpsPositionData::~CGpsPositionData()
 
 }
 
+bool CGpsPositionData::set(int a_iColumn, double a_dVal)
+{
+    bool fResult = false;
+
+    if( (0 <= a_iColumn) && (static_cast<int>(GPS_DATA_COUNT) > a_iColumn) )
+    {
+        m_aData[a_iColumn] = a_dVal;
+        fResult = true;
+    }
+    return fResult;
+}
+
 
 
 bool CGpsPositionData::set(QVector<double>::iterator a_iterBegin, QVector<double>::iterator a_iterEnd)

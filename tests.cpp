@@ -1,8 +1,12 @@
 #include "cgpspositiondata.h"
 #include "chttpdatastorage.h"
 #include "chttpbrowser.h"
+#include "cgpsdatastorage.h"
 
 #include <QDebug>
+
+
+CHttpBrowser oHttpBrowser; // MUSI
 
 void unittest_CGpsPositionData()
 {
@@ -30,18 +34,16 @@ void unittest_CGpsPositionData()
     }
 }
 
-CHttpBrowser oHttpBrowser; // MUSI
-
 void unittest_CSqlDataStorage()
 {
     CHttpDataStorage oHttpDataStorage(oHttpBrowser);
     std::unique_ptr<IData> ptrData(new CGpsPositionData);
 
     QVector<double> test_data;
-    test_data.append(1.2);
-    test_data.append(1.3);
-    test_data.append(1.4);
-    test_data.append(1.5);
+    test_data.append(1.21);
+    test_data.append(1.31);
+    test_data.append(1.41);
+    test_data.append(1.51);
 
     ptrData->set(test_data.begin(), test_data.end() );
 
@@ -57,4 +59,9 @@ void unittest_CHttpBrowser()
     params.append(qMakePair(QString("Comments"), QString("to sa komentarze") ) );
     oHttpBrowser.submitForm(urlPost, params);
 
+}
+
+void unittest_CGpsDataStorage()
+{
+    CGpsDataStorage oGpsDataStorage;
 }
