@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <ctime>
 #include <cstdlib>
+#include <QThread>
 
 
 CHttpBrowser oHttpBrowser; // MUSI
@@ -54,12 +55,24 @@ void unittest_CSqlDataStorage()
 
 void unittest_CHttpBrowser()
 {
+    const int iSUBMITS_ATTEMPS = 10;
+
     const QString urlPost = "http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi";
     PostParamsList_t params;
     params.append(qMakePair(QString("box"), QString("yes") ) );
     params.append(qMakePair(QString("hidden field"), QString("hidden test") ) );
     params.append(qMakePair(QString("Comments"), QString("to sa komentarze") ) );
-    oHttpBrowser.submitForm(urlPost, params);
+
+    for(int i = 0; iSUBMITS_ATTEMPS > i; ++i)
+    {
+        bool fResult = oHttpBrowser.submitForm(urlPost, params);
+
+        do
+        {
+            QThread::sleep(10);
+            fResult = oHttpBrowser.submitForm(urlPost, params);
+        }while(!fResult);
+    }
 
 }
 

@@ -16,8 +16,10 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     unittest_CGpsPositionData();
+    unittest_CHttpBrowser();
+
    // unittest_CSqlDataStorage();
-    unittest_CGpsDataStorage_upload();
+   // unittest_CGpsDataStorage_upload();
 
     return app.exec();
 

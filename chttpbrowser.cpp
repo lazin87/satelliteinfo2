@@ -14,7 +14,7 @@ CHttpBrowser::CHttpBrowser(QObject *a_pParent)
     , m_pNetworkAccessMngr(0)
     , m_pReplay(0)
     , m_pFile(0)
-    , m_fIsBusy(false)
+    , m_BrowserSts(HBSts_IDLE)
 {
     m_pNetworkAccessMngr = new QNetworkAccessManager(this);
 }
@@ -24,6 +24,7 @@ CHttpBrowser::~CHttpBrowser()
     qDebug() << "destruct";
 }
 
+/*
 bool CHttpBrowser::startGetRequest()
 {
     bool fResult = false;
@@ -41,7 +42,8 @@ bool CHttpBrowser::startGetRequest()
 
     return fResult;
 }
-
+*/
+/*
 bool CHttpBrowser::startPostRequest()//QUrl a_postUrl, const PostParamsList_t &a_pParamsList)
 {
     bool fResult = false;
@@ -68,13 +70,14 @@ bool CHttpBrowser::startPostRequest()//QUrl a_postUrl, const PostParamsList_t &a
 
     return fResult;
 }
+*/
 
 void CHttpBrowser::setPostParams(const PostParamsList_t &a_ParamsList)
 {
-    if(!m_postParamsList.isEmpty() )
+    if(!m_postUrlQuery.isEmpty() )
     {
         qDebug("Params list cleared()");
-        m_postParamsList.clear();
+        m_postUrlQuery.clear();
     }
     qDebug() << "Params:";
     foreach(PostParam_t param, a_ParamsList)
@@ -82,10 +85,32 @@ void CHttpBrowser::setPostParams(const PostParamsList_t &a_ParamsList)
         qDebug() << "First: " << param.first
                  << "Second: " << param.second;
 
-        m_postParamsList.addQueryItem(param.first, param.second);
+        m_postUrlQuery.addQueryItem(param.first, param.second);
     }
 }
 
+bool CHttpBrowser::validateSubmitedData(const QString &a_strTargetUrl, const PostParamsList_t &a_paramsList)
+{
+    bool fResult = !a_strTargetUrl.isEmpty() && ( QUrl(a_strTargetUrl) ).isValid();
+
+    if(fResult)
+    {
+        fResult = !a_paramsList.isEmpty();
+    }
+    else
+    {
+        qWarning() << "Wrong url is set";
+    }
+
+    if(!fResult)
+    {
+        qWarning() << "Param list is empty";
+    }
+
+    return fResult;
+}
+
+/*
 void CHttpBrowser::downloadWebpage(const QString & a_Url)
 {
     m_url = QUrl(a_Url);
@@ -117,7 +142,104 @@ void CHttpBrowser::downloadWebpage(const QString & a_Url)
 
     startGetRequest();
 }
+*/
 
+bool CHttpBrowser::submitForm(const QString &a_strTargetUrl, const PostParamsList_t &a_paramsList)
+{
+    bool fResult = false;
+
+    if(HBSts_IDLE == m_BrowserSts)
+    {
+        qWarning() << "Form was submited";
+
+        fResult = validateSubmitedData(a_strTargetUrl, a_paramsList);
+
+        if(fResult)
+        {
+            m_BrowserSts = HBSts_BUSY;
+
+            m_url = QUrl(a_strTargetUrl);
+            setPostParams(a_paramsList);
+
+            QFileInfo fileInfo(m_url.path() );
+            QString fileName = fileInfo.fileName();
+
+            if(fileName.isEmpty() )
+            {
+                qWarning("Filename empty");
+                fileName = "result.txt";
+            }
+
+            if(QFile::exists(fileName) )
+            {
+                qDebug("File %s is overwritten", fileName.toStdString().c_str() );
+                QFile::remove(fileName);
+            }
+
+            m_pFile = new QFile(fileName);
+            fResult = m_pFile->open(QIODevice::WriteOnly);
+            if(fResult)
+            {
+                startPostRequest();
+            }
+            else
+            {
+                qWarning("File: %s open error: %s", fileName.toStdString().c_str()
+                                             , m_pFile->errorString().toStdString().c_str() );
+                delete m_pFile;
+                m_pFile = 0;
+                m_BrowserSts = HBSts_IDLE;
+            }
+        }
+    }
+    else
+    {
+        qWarning() << "Browser is busy";
+    }
+
+    return fResult;
+}
+
+void CHttpBrowser::downloadFinished()
+{
+    m_pFile->flush();
+    m_pFile->close();
+
+    QVariant redirectionTarget = m_pReplay->attribute(QNetworkRequest::RedirectionTargetAttribute);
+
+    if(m_pReplay->error() )
+    {
+        qWarning("Download fail: %s", m_pReplay->errorString().toStdString().c_str() );
+        m_pFile->remove();
+    }
+    else if(!redirectionTarget.isNull() )
+    {
+        QUrl newUrl = m_url.resolved(redirectionTarget.toUrl() );
+
+        qDebug("Redirection %s to %s", m_url.toString().toStdString().c_str()
+                                   , newUrl.toString().toStdString().c_str() );
+
+        m_url = newUrl;
+        m_pReplay->deleteLater();
+        m_pFile->open(QIODevice::WriteOnly);
+        m_pFile->resize(0);
+        startPostRequest();
+
+        return;
+    }
+    else
+    {
+        qDebug("Downolad post finished");
+    }
+
+    m_pReplay->deleteLater();
+    m_pReplay = 0;
+    delete m_pFile;
+    m_pFile = 0;
+    m_BrowserSts = HBSts_IDLE;
+}
+
+/*
 void CHttpBrowser::submitForm(QString a_strTargetUrl, PostParamsList_t a_paramsList)
 {
     // wait till previous request is ended
@@ -140,7 +262,7 @@ void CHttpBrowser::submitForm(QString a_strTargetUrl, PostParamsList_t a_paramsL
         return;
     }
 
-    if(m_postParamsList.isEmpty() )
+    if(m_postUrlQuery.isEmpty() )
     {
         qWarning("Empty param list");
         return;
@@ -174,7 +296,9 @@ void CHttpBrowser::submitForm(QString a_strTargetUrl, PostParamsList_t a_paramsL
 
     startPostRequest();
 }
+*/
 
+/*
 void CHttpBrowser::downloadFinished()
 {
     m_pFile->flush();
@@ -193,13 +317,7 @@ void CHttpBrowser::downloadFinished()
 
         qDebug("Redirection %s to %s", m_url.toString().toStdString().c_str()
                                    , newUrl.toString().toStdString().c_str() );
-/*
-        m_url = newUrl;
-        m_pReplay->deleteLater();
-        m_pFile->open(QIODevice::WriteOnly);
-        m_pFile->resize(0);
-        startRequest();
-*/
+
         return;
     }
     else
@@ -214,7 +332,9 @@ void CHttpBrowser::downloadFinished()
     m_pFile = 0;
     //exit(EXIT_SUCCESS);
 }
+*/
 
+/*
 void CHttpBrowser::downloadPostFinished()
 {
     qDebug("donload post finished");
@@ -254,6 +374,7 @@ void CHttpBrowser::downloadPostFinished()
     delete m_pFile;
     m_pFile = 0;
 }
+*/
 
 void CHttpBrowser::dataReadyToRead()
 {
@@ -266,5 +387,28 @@ void CHttpBrowser::dataReadyToRead()
     {
         qWarning("m_pFile == 0");
     }
+}
+
+void CHttpBrowser::startPostRequest()
+{
+    qDebug() << "start startPostRequest()";
+
+    QNetworkRequest request(m_url);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      "application/x-www-form-urlencoded");
+
+    m_pReplay = m_pNetworkAccessMngr->post(request, m_postUrlQuery.toString(QUrl::FullyEncoded).toUtf8() );
+
+
+    connect( m_pReplay, SIGNAL(finished() )
+             , this, SLOT(downloadFinished() )
+             );
+
+    connect( m_pReplay, SIGNAL(readyRead() )
+             , this, SLOT(dataReadyToRead() )
+             );
+
+    qDebug() << "end startPostRequest()";
 }
 

@@ -28,30 +28,35 @@ class CHttpBrowser : public QObject
     Q_OBJECT
 
 public:
+    enum EHttpBrowserSts
+    {
+        HBSts_BUSY = 0,
+        HBSts_IDLE = 1
+    };
+
     CHttpBrowser(QObject *a_pParent = 0);
     ~CHttpBrowser();
 
-    void downloadWebpage(const QString &a_Url);
-    void submitForm(QString a_strTargetUrl, PostParamsList_t a_paramsList = PostParamsList_t() );
+  //  void downloadWebpage(const QString &a_Url);
+    bool submitForm(QString const & a_strTargetUrl, PostParamsList_t const & a_paramsList = PostParamsList_t() );
 
 private slots:
     void downloadFinished();
-    void downloadPostFinished();
     void dataReadyToRead();
 
 private:
-    bool startGetRequest();
-    bool startPostRequest();//QUrl a_postUrl, PostParamsList_t const & a_pParamsList);
+    void startPostRequest();
     void setPostParams(PostParamsList_t const & a_ParamsList);
     void clearPostParams();
+    bool validateSubmitedData(QString const & a_strTargetUrl, PostParamsList_t const & a_paramsList);
 
     QUrl m_url;
     QNetworkAccessManager *m_pNetworkAccessMngr;
     QNetworkReply *m_pReplay;
     QFile *m_pFile;
-    QUrlQuery m_postParamsList;
+    QUrlQuery m_postUrlQuery;
 
-    bool m_fIsBusy;
+    EHttpBrowserSts m_BrowserSts;
 };
 
 #endif // CHTTPBROWSER_H
