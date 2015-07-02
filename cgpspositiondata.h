@@ -21,7 +21,9 @@ public:
     ~CGpsPositionData();
 
     // IData interface
+    virtual bool set(int a_iColumn, double a_dVal);
     virtual bool set(QVector<double>::iterator a_iterBegin, QVector<double>::iterator a_iterEnd);
+
     virtual QString toString();
     virtual QString columnName(int a_iColumn) const;
     virtual double get(int a_iColumn) const;
