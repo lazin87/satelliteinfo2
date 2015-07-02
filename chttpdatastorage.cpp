@@ -15,14 +15,14 @@ CHttpDataStorage::~CHttpDataStorage()
 
 
 
-void CHttpDataStorage::push(const std::unique_ptr<IData> &a_crData)
+void CHttpDataStorage::push(IData const & a_crData)
 {
     PostParamsList_t postParamList;
-    const int iCOLUMN_COUNT = a_crData->count();
+    const int iCOLUMN_COUNT = a_crData.count();
 
     for(int i = 0; iCOLUMN_COUNT > i; ++i)
     {
-        PostParam_t postParam( a_crData->columnName(i), QString::number(a_crData->get(i) ) );
+        PostParam_t postParam( a_crData.columnName(i), QString::number(a_crData.get(i) ) );
         postParamList.append(postParam);
     }
 

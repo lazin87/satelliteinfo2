@@ -4,7 +4,6 @@
 #include "idata.h"
 
 #include <QString>
-#include <memory>
 
 
 class IRemoteDataStorage
@@ -20,7 +19,8 @@ public:
     IRemoteDataStorage();
     virtual ~IRemoteDataStorage();
 
-    virtual void push(std::unique_ptr<IData> const & a_crData) = 0;
+    //virtual void push(std::unique_ptr<IData> const & a_crData) = 0;
+    virtual void push(IData const & a_crData) = 0;
     virtual void pull(QVector<IData> & a_rData) = 0;
 
     virtual ERemoteDataStorageSts status() const = 0;

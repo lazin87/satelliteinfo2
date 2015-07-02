@@ -14,6 +14,7 @@ CHttpBrowser::CHttpBrowser(QObject *a_pParent)
     , m_pNetworkAccessMngr(0)
     , m_pReplay(0)
     , m_pFile(0)
+    , m_fIsBusy(false)
 {
     m_pNetworkAccessMngr = new QNetworkAccessManager(this);
 }
@@ -44,28 +45,26 @@ bool CHttpBrowser::startGetRequest()
 bool CHttpBrowser::startPostRequest()//QUrl a_postUrl, const PostParamsList_t &a_pParamsList)
 {
     bool fResult = false;
+    qDebug("Start POST request");
 
-    {
-        qDebug("Start POST request");
-        QNetworkRequest request(m_url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader,
-                          "application/x-www-form-urlencoded");
+    QNetworkRequest request(m_url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      "application/x-www-form-urlencoded");
 
-        m_pReplay = m_pNetworkAccessMngr->post(request, m_postParamsList.toString(QUrl::FullyEncoded).toUtf8() );
+    m_pReplay = m_pNetworkAccessMngr->post(request, m_postParamsList.toString(QUrl::FullyEncoded).toUtf8() );
 
-//        connect( m_pReplay, SIGNAL(finished() )
-//                 , this, SLOT(downloadPostFinished() )
-//                 );
+    //        connect( m_pReplay, SIGNAL(finished() )
+    //                 , this, SLOT(downloadPostFinished() )
+    //                 );
 
-        connect( m_pReplay, SIGNAL(finished() )
-                 , this, SLOT(downloadFinished() )
-                 );
+    connect( m_pReplay, SIGNAL(finished() )
+             , this, SLOT(downloadFinished() )
+             );
 
-        connect( m_pReplay, SIGNAL(readyRead() )
-                 , this, SLOT(dataReadyToRead() )
-                 );
-        fResult = true;
-    }
+    connect( m_pReplay, SIGNAL(readyRead() )
+             , this, SLOT(dataReadyToRead() )
+             );
+    fResult = true;
 
     return fResult;
 }
@@ -121,6 +120,11 @@ void CHttpBrowser::downloadWebpage(const QString & a_Url)
 
 void CHttpBrowser::submitForm(QString a_strTargetUrl, PostParamsList_t a_paramsList)
 {
+    // wait till previous request is ended
+    qDebug("Wait for end previous request");
+    while(m_fIsBusy);
+    m_fIsBusy = true;
+
     m_url = QUrl(a_strTargetUrl);
     if(!a_paramsList.isEmpty() )
     {
@@ -201,6 +205,7 @@ void CHttpBrowser::downloadFinished()
     else
     {
         qDebug("Downolad finished");
+        m_fIsBusy = false;
     }
 
     m_pReplay->deleteLater();
@@ -240,7 +245,8 @@ void CHttpBrowser::downloadPostFinished()
     }
     else
     {
-        qDebug("Downolad finished");
+        qDebug("Downolad post finished");
+        m_fIsBusy = false;
     }
 
     m_pReplay->deleteLater();

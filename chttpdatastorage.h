@@ -17,7 +17,7 @@ public:
 
     // IRemoteDataStorage interface
 public:
-    virtual void push(std::unique_ptr<IData> const & a_crData);
+    virtual void push(IData const & a_crData);
     virtual void pull(QVector<IData> & a_rData);
     virtual ERemoteDataStorageSts status() const;
 

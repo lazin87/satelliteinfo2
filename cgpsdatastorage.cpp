@@ -31,14 +31,19 @@ bool CGpsDataStorage::commitData(IData const * a_cpData)
     return fResult;
 }
 
-bool CGpsDataStorage::pushData(IRemoteDataStorage const & m_crRemoteDataStorage)
+bool CGpsDataStorage::pushData(IRemoteDataStorage & a_crRemoteDataStorage)
 {
     bool fReturn = false;
+
+    foreach(CGpsPositionData oOneRecord, m_aLocalDataStorage)
+    {
+        a_crRemoteDataStorage.push(oOneRecord);
+    }
 
     return fReturn;
 }
 
-bool CGpsDataStorage::pullData(const IRemoteDataStorage &m_crRemoteDataStorage)
+bool CGpsDataStorage::pullData(IRemoteDataStorage const & a_crRemoteDataStorage)
 {
     bool fReturn = false;
 

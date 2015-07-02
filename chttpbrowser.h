@@ -7,6 +7,10 @@
  * Only one request can be started in time.
  */
 
+/*
+ * Zabezpieczyc klase przed wielokrotna proba submitowania
+ */
+
 #include <QObject>
 #include <QVector>
 #include <QUrl>
@@ -46,6 +50,8 @@ private:
     QNetworkReply *m_pReplay;
     QFile *m_pFile;
     QUrlQuery m_postParamsList;
+
+    bool m_fIsBusy;
 };
 
 #endif // CHTTPBROWSER_H

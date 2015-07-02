@@ -18,8 +18,8 @@ public:
     // IDataStorage interface
 public:
     virtual bool commitData(IData const * a_cpData);
-    virtual bool pushData(IRemoteDataStorage const & m_crRemoteDataStorage);
-    virtual bool pullData(IRemoteDataStorage const & m_crRemoteDataStorage);
+    virtual bool pushData(IRemoteDataStorage &a_crRemoteDataStorage);
+    virtual bool pullData(IRemoteDataStorage const & a_crRemoteDataStorage);
     virtual ELocalDataStorageSts status() const;
 
 signals:

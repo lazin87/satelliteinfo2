@@ -4,6 +4,8 @@
 #include "cgpsdatastorage.h"
 
 #include <QDebug>
+#include <ctime>
+#include <cstdlib>
 
 
 CHttpBrowser oHttpBrowser; // MUSI
@@ -37,17 +39,17 @@ void unittest_CGpsPositionData()
 void unittest_CSqlDataStorage()
 {
     CHttpDataStorage oHttpDataStorage(oHttpBrowser);
-    std::unique_ptr<IData> ptrData(new CGpsPositionData);
+    CGpsPositionData oData;
 
     QVector<double> test_data;
-    test_data.append(1.21);
-    test_data.append(1.31);
-    test_data.append(1.41);
-    test_data.append(1.51);
+    test_data.append(1.23);
+    test_data.append(1.33);
+    test_data.append(1.43);
+    test_data.append(1.53);
 
-    ptrData->set(test_data.begin(), test_data.end() );
+    oData.set(test_data.begin(), test_data.end() );
 
-    oHttpDataStorage.push(ptrData);
+    oHttpDataStorage.push(oData);
 }
 
 void unittest_CHttpBrowser()
@@ -61,7 +63,29 @@ void unittest_CHttpBrowser()
 
 }
 
-void unittest_CGpsDataStorage()
+void unittest_CGpsDataStorage_upload()
 {
+    const int iNUMBER_OF_DATAPOINTS = 5;
+    const int iDATA_MIN = 0;
+    const int iDATA_MAX = 180;
+
     CGpsDataStorage oGpsDataStorage;
+    CHttpDataStorage oHttpDataStorage(oHttpBrowser);
+    CGpsPositionData oGpsData;
+
+    srand(time(NULL) ); // init random number generator
+
+    for(int i = 0; iNUMBER_OF_DATAPOINTS > i; ++i)
+    {
+        double dRandVal = (rand() % iDATA_MAX + iDATA_MIN) / (i + 1.0);
+
+        oGpsData.set(CGpsPositionData::TIMESTAMP, dRandVal + 1.0);
+        oGpsData.set(CGpsPositionData::LONGITUDE, dRandVal + 2.0);
+        oGpsData.set(CGpsPositionData::LATITUDE, dRandVal + 3.0);
+        oGpsData.set(CGpsPositionData::ALTITIUDE, dRandVal + 4.0);
+
+        oGpsDataStorage.commitData(&oGpsData);
+    }
+
+    oGpsDataStorage.pushData(oHttpDataStorage);
 }
