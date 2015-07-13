@@ -33,7 +33,7 @@ bool CHttpBrowserSynchro::open(qint64 a_i64Offset)
 {
     bool bSuccess = false;
 
-    if (isGuiThread())
+    if (isGuiThread() )
     {
         // For GUI threads, we use the non-blocking call and use QEventLoop to wait and yet keep the GUI alive
         QMetaObject::invokeMethod(this, "slotOpen", Qt::QueuedConnection,
@@ -57,6 +57,20 @@ bool CHttpBrowserSynchro::open(qint64 a_i64Offset)
     // as we wait for the invokeMethod call to complete.
 }
 
+bool CHttpBrowserSynchro::isGuiThread()
+{
+    bool fResult = false;
+
+    QCoreApplication *pCoreApp = QCoreApplication::instance();
+
+    if(NULL != pCoreApp)
+    {
+        fResult = QThread::currentThread() == pCoreApp->thread();
+    }
+
+    return fResult;
+}
+
 void CHttpBrowserSynchro::slotOpen(void *a_pReturnSuccess, void *a_pLoop, qint64 a_i64Offset)
 {
     *(bool*)a_pReturnSuccess = workerOpen(a_i64Offset);
@@ -65,5 +79,12 @@ void CHttpBrowserSynchro::slotOpen(void *a_pReturnSuccess, void *a_pLoop, qint64
     {
         QMetaObject::invokeMethod((QEventLoop*)a_pLoop, "quit", Qt::QueuedConnection);
     }
+}
+
+bool CHttpBrowserSynchro::workerOpen(qint64 a_i64Offset)
+{
+    qDebug() << "CHttpBrowserSynchro::workerOpen() offset = " << a_i64Offset;
+
+    clear();
 }
 

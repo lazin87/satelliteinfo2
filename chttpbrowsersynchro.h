@@ -6,6 +6,8 @@
 #include <QNetworkReply>
 #include <QEventLoop>
 #include <QThread>
+#include <QCoreApplication>
+#include <QDebug>
 
 class CHttpBrowserSynchro : public QObject
 {
@@ -19,9 +21,14 @@ public:
     virtual void close();
 
     bool open(qint64 a_i64Offset = 0);
+    bool isGuiThread();
 
 public slots:
     void slotOpen(void *a_pReturnSuccess, void *a_pLoop, qint64 a_i64Offset = 0);
+
+protected:
+    bool workerOpen(qint64 a_i64Offset = 0);
+    void clear();
 
 private:
     const QNetworkProxy * m_pNetworkProxy;
