@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick positioning network
+QT += qml quick positioning network core
 CONFIG += c++11
 SOURCES += main.cpp \
     satelliteinfo.cpp \
@@ -12,7 +12,8 @@ SOURCES += main.cpp \
     iremotedatastorage.cpp \
     ilocaldatastorage.cpp \
     chttpdatastorage.cpp \
-    chttpbrowser.cpp
+    chttpbrowser.cpp \
+    chttpbrowsersynchro.cpp
 
 RESOURCES += qml.qrc
 
@@ -31,4 +32,5 @@ HEADERS += \
     iremotedatastorage.h \
     ilocaldatastorage.h \
     chttpdatastorage.h \
-    chttpbrowser.h
+    chttpbrowser.h \
+    chttpbrowsersynchro.h
