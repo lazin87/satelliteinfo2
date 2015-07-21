@@ -2,7 +2,8 @@
 
 CHttpBrowserSynchro::CHttpBrowserSynchro(QObject *a_pParent)
     : QObject(a_pParent),
-      m_pNetworkProxy(NULL)
+      m_pNetworkProxy(NULL),
+      m_pReplay(NULL)
 {
     m_pSocketThread = new QThread(this);
     moveToThread(m_pSocketThread);
@@ -26,7 +27,12 @@ void CHttpBrowserSynchro::endSocketThread()
 
 void CHttpBrowserSynchro::close()
 {
-
+    if(m_pReplay != NULL)
+    {
+        m_pReplay->close();
+        m_pReplay->deleteLater();
+        m_pReplay = NULL;
+    }
 }
 
 bool CHttpBrowserSynchro::open(qint64 a_i64Offset)
@@ -71,6 +77,11 @@ bool CHttpBrowserSynchro::isGuiThread()
     return fResult;
 }
 
+void CHttpBrowserSynchro::resetReadFails()
+{
+    // TO DO
+}
+
 void CHttpBrowserSynchro::slotOpen(void *a_pReturnSuccess, void *a_pLoop, qint64 a_i64Offset)
 {
     *(bool*)a_pReturnSuccess = workerOpen(a_i64Offset);
@@ -86,5 +97,40 @@ bool CHttpBrowserSynchro::workerOpen(qint64 a_i64Offset)
     qDebug() << "CHttpBrowserSynchro::workerOpen() offset = " << a_i64Offset;
 
     clear();
+    resetReadFails();
+    close();
+
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    if(NULL != m_pNetworkProxy)
+    {
+        pManager->setProxy(*m_pNetworkProxy);
+    }
+
+    connect( pManager, SIGNAL(proxyAuthenticationRequired(QNetworkProxy,QAuthenticator*) ),
+             this, SLOT(slotProxyAuthenticationRequired(QNetworkProxy,QAuthenticator*) )
+           );
+
+    connect( pManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*) ),
+             this, SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*) )
+           );
+
+    QNetworkRequest oRequest;
+    oRequest.setUrl(m_oUrl);
+    oRequest.setRawHeader("User-Agent", "Qt NetworkAccess 1.3");
+}
+
+void CHttpBrowserSynchro::clear()
+{
+    // TO DO
+}
+
+void CHttpBrowserSynchro::slotProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *authenticator)
+{
+    // TO DO
+}
+
+void CHttpBrowserSynchro::slotAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator)
+{
+    // TO DO
 }
 
