@@ -2,7 +2,7 @@
 
 #include <QTimer>
 
-CHttpBrowserSynchro::CHttpBrowserSynchro(QObject *a_pParent)
+CHttpBrowserSynchro::CHttpBrowserSynchro(const QString & a_crstrUrl, QObject *a_pParent)
     : QObject(a_pParent),
       m_pNetworkProxy(NULL),
       m_pReplay(NULL),
@@ -17,9 +17,12 @@ CHttpBrowserSynchro::CHttpBrowserSynchro(QObject *a_pParent)
       m_fReadTimeout(false),
       m_iReadFails(0)
 {
-    m_pSocketThread = new QThread(this);
-    moveToThread(m_pSocketThread);
-    m_pSocketThread->start(QThread::HighestPriority);
+   // qRegisterMetaType<READMODE>("READMODE");        // Register our enum as metatype for invokeMethod
+   // qRegisterMetaType<QByteArray*>("QByteArray*");  // Register QByteArray as metatype for invokeMethod
+
+    clear();
+    init();
+    setUrl(a_crstrUrl);
 }
 
 CHttpBrowserSynchro::~CHttpBrowserSynchro()
@@ -34,7 +37,14 @@ CHttpBrowserSynchro::~CHttpBrowserSynchro()
 
 void CHttpBrowserSynchro::endSocketThread()
 {
+    if(NULL != m_pSocketThread)
+    {
+        m_pSocketThread->quit();
+        m_pSocketThread->wait();
 
+        delete m_pSocketThread;
+        m_pSocketThread = NULL;
+    }
 }
 
 void CHttpBrowserSynchro::close()
@@ -155,6 +165,11 @@ int CHttpBrowserSynchro::response() const
     return m_iResponse;
 }
 
+void CHttpBrowserSynchro::setUrl(const QString &a_strUrl)
+{
+    m_oUrl = QUrl::fromEncoded(a_strUrl.toUtf8() );
+}
+
 void CHttpBrowserSynchro::slotOpen(void *a_pReturnSuccess, void *a_pLoop, qint64 a_i64Offset)
 {
     *(bool*)a_pReturnSuccess = workerOpen(a_i64Offset);
@@ -263,6 +278,15 @@ bool CHttpBrowserSynchro::workerOpen(qint64 a_i64Offset)
              << "error" << error() << "size" << m_i64Size;
 
     return (200 == response() || 206 == response() );
+}
+
+void CHttpBrowserSynchro::init()
+{
+    endSocketThread();
+
+    m_pSocketThread = new QThread(this);
+    moveToThread(m_pSocketThread);
+    m_pSocketThread->start(QThread::HighestPriority);
 }
 
 void CHttpBrowserSynchro::clear()

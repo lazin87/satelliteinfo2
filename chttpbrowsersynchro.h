@@ -18,7 +18,7 @@ class CHttpBrowserSynchro : public QObject
     Q_OBJECT
 
 public:
-    CHttpBrowserSynchro(QObject * a_pParent = 0);
+    CHttpBrowserSynchro(const QString &a_crstrUrl, QObject * a_pParent = 0);
     ~CHttpBrowserSynchro();
 
     void endSocketThread();
@@ -30,12 +30,14 @@ public:
     void resetReadFails();
     bool waitForConnect(int a_iTimeOutms, QNetworkAccessManager *a_pManager);
     int response() const;
+    void setUrl(const QString & a_strUrl);
 
 public slots:
     void slotOpen(void *a_pReturnSuccess, void *a_pLoop, qint64 a_i64Offset = 0);
 
 protected:
     bool workerOpen(qint64 a_i64Offset = 0);
+    void init();
     void clear();
     QNetworkReply::NetworkError responseToError(int a_iResponse) const;
 
