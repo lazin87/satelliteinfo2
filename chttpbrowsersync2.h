@@ -2,20 +2,43 @@
 #define CHTTPBROWSERSYNC2_H
 
 #include <QObject>
+#include <QUrl>
+
+class QFile;
+class QNetworkReply;
+class QNetworkAccessManager;
 
 class CHttpBrowserSync2 : public QObject
 {
     Q_OBJECT
 
 public:
-    CHttpBrowserSync2(const QString &a_crstrUrl, QObject * a_pParent = 0);
+    CHttpBrowserSync2(QObject * a_pParent = 0);
     ~CHttpBrowserSync2();
 
-    void startHttpRequest(const QString &a_crstrUrl);
+    void submitHttpRequest();
     void setHttpParams();
+    void setUrl(const QString &a_crstrUrl);
+
+private slots:
+    void downloadFinished();
+    void dataReadyToRead();
 
 private:
     bool isGuiThread();
+    bool prepareDataOutput(QString &a_rstrName);
+    void clear();
+    void closeOutput();
+    void startHttpRequest();
+    void startBrowserThread();
+    void endBrowserThread();
+
+    QUrl m_oUrl;
+    QFile * m_pOutputFile;
+    QNetworkReply * m_pReplay;
+    QNetworkAccessManager * m_pNetworkAccessMngr;
+
+    QThread * m_pBrowserThread;
 };
 
 #endif // CHTTPBROWSERSYNC2_H
