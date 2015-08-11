@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     ilocaldatastorage.cpp \
     chttpdatastorage.cpp \
     chttpbrowser.cpp \
-    chttpbrowsersync.cpp
+    chttpbrowsersync.cpp \
+    cpositionloger.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,4 +34,5 @@ HEADERS += \
     ilocaldatastorage.h \
     chttpdatastorage.h \
     chttpbrowser.h \
-    chttpbrowsersync.h
+    chttpbrowsersync.h \
+    cpositionloger.h
