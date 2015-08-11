@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QTimer>
 
 CHttpBrowserSync2::CHttpBrowserSync2(QObject *a_pParent)
     : QObject(a_pParent)
@@ -14,6 +15,8 @@ CHttpBrowserSync2::CHttpBrowserSync2(QObject *a_pParent)
     , m_pOutputFile(0)
     , m_pReplay(0)
     , m_pBrowserThread(0)
+   // , m_pWaitForDataTimer(0)
+    , m_fTimeout(false)
 {
     m_pNetworkAccessMngr = new QNetworkAccessManager(this);
 
@@ -22,6 +25,7 @@ CHttpBrowserSync2::CHttpBrowserSync2(QObject *a_pParent)
 
 CHttpBrowserSync2::~CHttpBrowserSync2()
 {
+    qDebug() << "CHttpBrowserSync2::~CHttpBrowserSync2()";
     m_oEventLoop.exit(1);
     closeOutput();
     endBrowserThread();
@@ -34,7 +38,7 @@ bool CHttpBrowserSync2::startProcessRequest()
 
     if(isGuiThread() )
     {
-        qDebug() << "Is a GUI Thread";
+        qDebug() << "It is a GUI Thread";
         QMetaObject::invokeMethod(this, "processRequest", Qt::QueuedConnection,
                                   Q_ARG(void *, &fResult),
                                   Q_ARG(void *, &m_oEventLoop)
@@ -44,7 +48,7 @@ bool CHttpBrowserSync2::startProcessRequest()
     }
     else
     {
-        qDebug() << "Is not a GUI thread";
+        qDebug() << "It is not a GUI thread";
         QMetaObject::invokeMethod(this, "processRequest", Qt::BlockingQueuedConnection,
                                   Q_ARG(void *, &fResult),
                                   Q_ARG(void *, 0)
@@ -72,6 +76,7 @@ bool CHttpBrowserSync2::submitHttpRequest()
     if(fResult)
     {
         startHttpRequest();
+        fResult = waitEndOfProccessing(iWAIT_TIMEOUTMS);
     }
 
     return fResult;
@@ -110,6 +115,8 @@ void CHttpBrowserSync2::downloadFinished()
     m_pReplay = 0;
     delete m_pOutputFile;
     m_pOutputFile = 0;
+
+    clear();
 }
 
 void CHttpBrowserSync2::dataReadyToRead()
@@ -125,6 +132,13 @@ void CHttpBrowserSync2::dataReadyToRead()
     }
 }
 
+void CHttpBrowserSync2::waitTimeout()
+{
+    qWarning() << "Wait timeout. Url: " << m_oUrl.toString();
+    m_fTimeout = true;
+    emit signalReadTimeout();
+}
+
 void CHttpBrowserSync2::processRequest(void *a_pIsSuccess, void *a_pLoop)
 {
     bool * pIsSuccess = reinterpret_cast<bool *>(a_pIsSuccess);
@@ -138,6 +152,61 @@ void CHttpBrowserSync2::processRequest(void *a_pIsSuccess, void *a_pLoop)
                                  , Qt::QueuedConnection
                                  );
     }
+}
+
+bool CHttpBrowserSync2::waitEndOfProccessing(int a_iTimeout)
+{
+    QEventLoop oEventLoop;
+    QTimer *pTimer = 0;
+
+    qDebug() << "Wait " << a_iTimeout << " ms for url: "
+             << m_oUrl.toString();
+
+    if(0 < a_iTimeout)
+    {
+        pTimer = new QTimer(this);
+        connect(pTimer, SIGNAL(timeout() ),
+                this, SLOT(waitTimeout() )
+                );
+
+        pTimer->setSingleShot(true);
+        pTimer->start(a_iTimeout);
+
+        connect(this, SIGNAL(signalReadTimeout() ),
+                &oEventLoop, SLOT(quit() )
+                );
+
+        if(0 != m_pReplay)
+        {
+            connect(m_pReplay, SIGNAL(readyRead() ),
+                    pTimer, SLOT(stop() )
+                    );
+        }
+    }
+
+    connect( m_pNetworkAccessMngr, SIGNAL(finished(QNetworkReply*) ),
+             &oEventLoop, SLOT(quit() )
+             );
+
+    if(0 != m_pReplay)
+    {
+        connect(m_pReplay, SIGNAL(finished() ),
+                &oEventLoop, SLOT(quit() )
+                );
+    }
+
+    oEventLoop.exec();
+
+    if(0 != pTimer)
+    {
+        pTimer->stop();
+        delete pTimer;
+        pTimer = 0;
+    }
+
+    qDebug() << "end of wait";
+
+    return !m_fTimeout;
 }
 
 bool CHttpBrowserSync2::isGuiThread()

@@ -104,11 +104,17 @@ void unittest_CGpsDataStorage_upload()
     oGpsDataStorage.pushData(oHttpDataStorage);
 }
 
-CHttpBrowserSync2 oHttpBrowserSync; // MUSI
 void unittest_CHttpSyncBrowser()
 {
     const QString strUrl = "http://www.wp.pl";
+    const int iIterations = 10;
+    CHttpBrowserSync2 oHttpBrowserSync;
 
-    oHttpBrowserSync.setUrl(strUrl);
-    oHttpBrowserSync.startProcessRequest();
+    for(int i = 0; iIterations > i; ++i)
+    {
+        qDebug() << "oHttpBrowserSync iter: " << i;
+
+        oHttpBrowserSync.setUrl(strUrl);
+        oHttpBrowserSync.startProcessRequest();
+    }
 }

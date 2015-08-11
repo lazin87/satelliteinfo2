@@ -8,12 +8,15 @@
 class QFile;
 class QNetworkReply;
 class QNetworkAccessManager;
+class QTimer;
 
 class CHttpBrowserSync2 : public QObject
 {
     Q_OBJECT
 
 public:
+    const int iWAIT_TIMEOUTMS = 1000;
+
     CHttpBrowserSync2(QObject * a_pParent = 0);
     ~CHttpBrowserSync2();
 
@@ -25,10 +28,15 @@ public:
 private slots:
     void downloadFinished();
     void dataReadyToRead();
+    void waitTimeout();
+
+signals:
+    void signalReadTimeout();
 
 private:
     // only Q_INVOKABLE slots and methods can be call be QMetaObject::invokeMethod()
     Q_INVOKABLE  void processRequest(void * a_pIsSuccess, void * a_pLoop);
+    bool waitEndOfProccessing(int a_iTimeout);
     bool submitHttpRequest();
     bool isGuiThread();
     bool prepareDataOutput(QString &a_rstrName);
@@ -45,6 +53,8 @@ private:
 
     QThread * m_pBrowserThread;
     QEventLoop m_oEventLoop;
+
+    bool m_fTimeout;
 };
 
 #endif // CHTTPBROWSERSYNC2_H
