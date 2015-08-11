@@ -40,7 +40,8 @@ void unittest_CGpsPositionData()
 
 void unittest_CSqlDataStorage()
 {
-    CHttpDataStorage oHttpDataStorage(oHttpBrowser);
+    CHttpBrowserSync2 oHttpBrowserSync;
+    CHttpDataStorage oHttpDataStorage(oHttpBrowserSync);
     CGpsPositionData oData;
 
     QVector<double> test_data;
@@ -79,12 +80,13 @@ void unittest_CHttpBrowser()
 
 void unittest_CGpsDataStorage_upload()
 {
-    const int iNUMBER_OF_DATAPOINTS = 5;
+    const int iNUMBER_OF_DATAPOINTS = 100;
     const int iDATA_MIN = 0;
     const int iDATA_MAX = 180;
 
     CGpsDataStorage oGpsDataStorage;
-    CHttpDataStorage oHttpDataStorage(oHttpBrowser);
+    CHttpBrowserSync2 oHttpBrowserSync;
+    CHttpDataStorage oHttpDataStorage(oHttpBrowserSync);
     CGpsPositionData oGpsData;
 
     srand(time(NULL) ); // init random number generator

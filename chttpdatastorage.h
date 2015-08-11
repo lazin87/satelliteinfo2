@@ -3,7 +3,7 @@
 
 
 #include "iremotedatastorage.h"
-#include "chttpbrowser.h"
+#include "chttpbrowsersync2.h"
 
 
 class CHttpDataStorage : public IRemoteDataStorage
@@ -11,7 +11,7 @@ class CHttpDataStorage : public IRemoteDataStorage
 public:
     const QString strTARGET_URL = "http://lazinski.pl/QtTest/includes/addRow.php";
 
-    CHttpDataStorage(CHttpBrowser & a_rHttpBrowser);
+    CHttpDataStorage(CHttpBrowserSync2 & a_rHttpBrowser);
 
     ~CHttpDataStorage();
 
@@ -23,7 +23,7 @@ public:
 
 private:
     ERemoteDataStorageSts m_eDataStorageSts;
-    CHttpBrowser * m_pHttpBrowser;
+    CHttpBrowserSync2 * m_pHttpBrowser;
 };
 
 #endif // CSQLDATASTORAGE_H

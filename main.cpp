@@ -19,10 +19,10 @@ int main(int argc, char *argv[])
    // unittest_CHttpBrowser();
 
    // unittest_CSqlDataStorage();
-   // unittest_CGpsDataStorage_upload();
+    unittest_CGpsDataStorage_upload();
 
   //  unittest_CHttpSyncBrowserGET();
-    unittest_CHttpSyncBrowserPOST();
+  //  unittest_CHttpSyncBrowserPOST();
 
     return app.exec();
 
