@@ -2,7 +2,7 @@
 #include "chttpdatastorage.h"
 #include "chttpbrowser.h"
 #include "cgpsdatastorage.h"
-#include "chttpbrowsersync2.h"
+#include "chttpbrowsersync.h"
 
 #include <QDebug>
 #include <ctime>
@@ -40,7 +40,7 @@ void unittest_CGpsPositionData()
 
 void unittest_CSqlDataStorage()
 {
-    CHttpBrowserSync2 oHttpBrowserSync;
+    CHttpBrowserSync oHttpBrowserSync;
     CHttpDataStorage oHttpDataStorage(oHttpBrowserSync);
     CGpsPositionData oData;
 
@@ -85,7 +85,7 @@ void unittest_CGpsDataStorage_upload()
     const int iDATA_MAX = 180;
 
     CGpsDataStorage oGpsDataStorage;
-    CHttpBrowserSync2 oHttpBrowserSync;
+    CHttpBrowserSync oHttpBrowserSync;
     CHttpDataStorage oHttpDataStorage(oHttpBrowserSync);
     CGpsPositionData oGpsData;
 
@@ -110,14 +110,14 @@ void unittest_CHttpSyncBrowserGET()
 {
     const QString strUrl = "http://www.wp.pl";
     const int iIterations = 10;
-    CHttpBrowserSync2 oHttpBrowserSync;
+    CHttpBrowserSync oHttpBrowserSync;
 
     for(int i = 0; iIterations > i; ++i)
     {
         qDebug() << "oHttpBrowserSync iter: " << i;
 
         oHttpBrowserSync.setUrl(strUrl);
-        oHttpBrowserSync.setEHttpReq(CHttpBrowserSync2::eHttpReqGET);
+        oHttpBrowserSync.setEHttpReq(CHttpBrowserSync::eHttpReqGET);
         oHttpBrowserSync.startProcessRequest();
     }
 }
@@ -127,7 +127,7 @@ void unittest_CHttpSyncBrowserPOST()
     const QString strUrl = "http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi";
     const int iIterations = 10;
     PostParamsList_t params;
-    CHttpBrowserSync2 oHttpBrowserSync;
+    CHttpBrowserSync oHttpBrowserSync;
 
     params.append(qMakePair(QString("box"), QString("yes") ) );
     params.append(qMakePair(QString("hidden field"), QString("hidden test") ) );
@@ -138,7 +138,7 @@ void unittest_CHttpSyncBrowserPOST()
         qDebug() << "oHttpBrowserSyncPOST iter: " << i;
 
         oHttpBrowserSync.setUrl(strUrl);
-        oHttpBrowserSync.setEHttpReq(CHttpBrowserSync2::eHttpReqPOST);
+        oHttpBrowserSync.setEHttpReq(CHttpBrowserSync::eHttpReqPOST);
         oHttpBrowserSync.setHttpParams(params);
         oHttpBrowserSync.startProcessRequest();
     }

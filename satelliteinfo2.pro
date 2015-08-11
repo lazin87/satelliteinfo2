@@ -13,7 +13,7 @@ SOURCES += main.cpp \
     ilocaldatastorage.cpp \
     chttpdatastorage.cpp \
     chttpbrowser.cpp \
-    chttpbrowsersync2.cpp
+    chttpbrowsersync.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,4 +33,4 @@ HEADERS += \
     ilocaldatastorage.h \
     chttpdatastorage.h \
     chttpbrowser.h \
-    chttpbrowsersync2.h
+    chttpbrowsersync.h

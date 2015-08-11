@@ -1,4 +1,4 @@
-#include "chttpbrowsersync2.h"
+#include "chttpbrowsersync.h"
 
 #include <QCoreApplication>
 #include <QThread>
@@ -10,7 +10,7 @@
 #include <QTimer>
 #include <QDateTime>
 
-CHttpBrowserSync2::CHttpBrowserSync2(QObject *a_pParent)
+CHttpBrowserSync::CHttpBrowserSync(QObject *a_pParent)
     : QObject(a_pParent)
     , m_oUrl()
     , m_pOutputFile(0)
@@ -24,7 +24,7 @@ CHttpBrowserSync2::CHttpBrowserSync2(QObject *a_pParent)
     startBrowserThread();
 }
 
-CHttpBrowserSync2::~CHttpBrowserSync2()
+CHttpBrowserSync::~CHttpBrowserSync()
 {
     qDebug() << "CHttpBrowserSync2::~CHttpBrowserSync2()";
     m_oEventLoop.exit(1);
@@ -32,7 +32,7 @@ CHttpBrowserSync2::~CHttpBrowserSync2()
     endBrowserThread();
 }
 
-bool CHttpBrowserSync2::startProcessRequest()
+bool CHttpBrowserSync::startProcessRequest()
 {
     // TO DO
     bool fResult = false;
@@ -59,7 +59,7 @@ bool CHttpBrowserSync2::startProcessRequest()
     return fResult;
 }
 
-bool CHttpBrowserSync2::checkHttpReqParams()
+bool CHttpBrowserSync::checkHttpReqParams()
 {
     qDebug() << "Check http req params";
     bool fResult = !m_oUrl.isEmpty();
@@ -77,7 +77,7 @@ bool CHttpBrowserSync2::checkHttpReqParams()
     return fResult;
 }
 
-bool CHttpBrowserSync2::submitHttpRequest()
+bool CHttpBrowserSync::submitHttpRequest()
 {
     qDebug() << "Submit http req url: " << m_oUrl.toString();
 
@@ -105,14 +105,14 @@ bool CHttpBrowserSync2::submitHttpRequest()
     return fResult;
 }
 
-void CHttpBrowserSync2::setUrl(const QString &a_crstrUrl)
+void CHttpBrowserSync::setUrl(const QString &a_crstrUrl)
 {
     qDebug() << "New url was set: " << a_crstrUrl;
 
     m_oUrl = QUrl(a_crstrUrl);
 }
 
-void CHttpBrowserSync2::downloadFinished()
+void CHttpBrowserSync::downloadFinished()
 {
     m_pOutputFile->flush();
     m_pOutputFile->close();
@@ -141,7 +141,7 @@ void CHttpBrowserSync2::downloadFinished()
     clear();
 }
 
-void CHttpBrowserSync2::dataReadyToRead()
+void CHttpBrowserSync::dataReadyToRead()
 {
     if(0 != m_pOutputFile)
     {
@@ -154,14 +154,14 @@ void CHttpBrowserSync2::dataReadyToRead()
     }
 }
 
-void CHttpBrowserSync2::waitTimeout()
+void CHttpBrowserSync::waitTimeout()
 {
     qWarning() << "Wait timeout. Url: " << m_oUrl.toString();
     m_fTimeout = true;
     emit signalReadTimeout();
 }
 
-void CHttpBrowserSync2::processRequest(void *a_pIsSuccess, void *a_pLoop)
+void CHttpBrowserSync::processRequest(void *a_pIsSuccess, void *a_pLoop)
 {
     bool * pIsSuccess = reinterpret_cast<bool *>(a_pIsSuccess);
 
@@ -176,7 +176,7 @@ void CHttpBrowserSync2::processRequest(void *a_pIsSuccess, void *a_pLoop)
     }
 }
 
-bool CHttpBrowserSync2::waitEndOfProccessing(int a_iTimeout)
+bool CHttpBrowserSync::waitEndOfProccessing(int a_iTimeout)
 {
     QEventLoop oEventLoop;
     QTimer *pTimer = 0;
@@ -231,7 +231,7 @@ bool CHttpBrowserSync2::waitEndOfProccessing(int a_iTimeout)
     return !m_fTimeout;
 }
 
-bool CHttpBrowserSync2::isGuiThread()
+bool CHttpBrowserSync::isGuiThread()
 {
     bool fResult = false;
 
@@ -245,7 +245,7 @@ bool CHttpBrowserSync2::isGuiThread()
     return fResult;
 }
 
-bool CHttpBrowserSync2::prepareDataOutput(QString &a_rstrName)
+bool CHttpBrowserSync::prepareDataOutput(QString &a_rstrName)
 {
     bool fResult = false;
 
@@ -284,7 +284,7 @@ bool CHttpBrowserSync2::prepareDataOutput(QString &a_rstrName)
     return fResult;
 }
 
-void CHttpBrowserSync2::clear()
+void CHttpBrowserSync::clear()
 {
     m_oUrl = QUrl();
 
@@ -299,7 +299,7 @@ void CHttpBrowserSync2::clear()
     m_urlDataQuery.clear();
 }
 
-void CHttpBrowserSync2::closeOutput()
+void CHttpBrowserSync::closeOutput()
 {
     if(0 != m_pOutputFile)
     {
@@ -314,7 +314,7 @@ void CHttpBrowserSync2::closeOutput()
     }
 }
 
-void CHttpBrowserSync2::startHttpRequest(EHttpRequestType a_eHttpReqType)
+void CHttpBrowserSync::startHttpRequest(EHttpRequestType a_eHttpReqType)
 {
     qDebug() << "Start httpRequest";
 
@@ -344,7 +344,7 @@ void CHttpBrowserSync2::startHttpRequest(EHttpRequestType a_eHttpReqType)
              );
 }
 
-void CHttpBrowserSync2::startBrowserThread()
+void CHttpBrowserSync::startBrowserThread()
 {
     endBrowserThread();
 
@@ -354,7 +354,7 @@ void CHttpBrowserSync2::startBrowserThread()
 
 }
 
-void CHttpBrowserSync2::endBrowserThread()
+void CHttpBrowserSync::endBrowserThread()
 {
     if(0 != m_pBrowserThread)
     {
@@ -365,17 +365,17 @@ void CHttpBrowserSync2::endBrowserThread()
         m_pBrowserThread = 0;
     }
 }
-CHttpBrowserSync2::EHttpRequestType CHttpBrowserSync2::eHttpReq() const
+CHttpBrowserSync::EHttpRequestType CHttpBrowserSync::eHttpReq() const
 {
     return m_eHttpReq;
 }
 
-void CHttpBrowserSync2::setEHttpReq(const EHttpRequestType &eHttpReq)
+void CHttpBrowserSync::setEHttpReq(const EHttpRequestType &eHttpReq)
 {
     m_eHttpReq = eHttpReq;
 }
 
-void CHttpBrowserSync2::setHttpParams(const PostParamsList_t &a_ParamsList)
+void CHttpBrowserSync::setHttpParams(const PostParamsList_t &a_ParamsList)
 {
     if(!m_urlDataQuery.isEmpty() )
     {

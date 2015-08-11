@@ -14,7 +14,7 @@ class QTimer;
 using PostParam_t = QPair<QString, QString>;
 using PostParamsList_t = QVector<PostParam_t>;
 
-class CHttpBrowserSync2 : public QObject
+class CHttpBrowserSync : public QObject
 {
     Q_OBJECT
 
@@ -27,8 +27,8 @@ public:
         eHttpReqPOST
     };
 
-    CHttpBrowserSync2(QObject * a_pParent = 0);
-    ~CHttpBrowserSync2();
+    CHttpBrowserSync(QObject * a_pParent = 0);
+    ~CHttpBrowserSync();
 
     void setUrl(const QString &a_crstrUrl);
     void setEHttpReq(const EHttpRequestType &eHttpReq);

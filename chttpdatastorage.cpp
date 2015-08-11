@@ -1,7 +1,7 @@
 #include "chttpdatastorage.h"
 #include <QDebug>
 
-CHttpDataStorage::CHttpDataStorage(CHttpBrowserSync2 &a_rHttpBrowser)
+CHttpDataStorage::CHttpDataStorage(CHttpBrowserSync &a_rHttpBrowser)
     : IRemoteDataStorage(),
       m_eDataStorageSts(RDSSts_INVALID),
       m_pHttpBrowser(&a_rHttpBrowser)
@@ -27,7 +27,7 @@ void CHttpDataStorage::push(IData const & a_crData)
     }
 
     m_pHttpBrowser->setUrl(strTARGET_URL);
-    m_pHttpBrowser->setEHttpReq(CHttpBrowserSync2::eHttpReqPOST);
+    m_pHttpBrowser->setEHttpReq(CHttpBrowserSync::eHttpReqPOST);
     m_pHttpBrowser->setHttpParams(postParamList);
     m_pHttpBrowser->startProcessRequest();
 }
