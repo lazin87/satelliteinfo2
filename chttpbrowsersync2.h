@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QUrl>
+#include <QEventLoop>
 
 class QFile;
 class QNetworkReply;
@@ -16,15 +17,19 @@ public:
     CHttpBrowserSync2(QObject * a_pParent = 0);
     ~CHttpBrowserSync2();
 
-    void submitHttpRequest();
+    bool startProcessRequest();
     void setHttpParams();
     void setUrl(const QString &a_crstrUrl);
+
 
 private slots:
     void downloadFinished();
     void dataReadyToRead();
 
 private:
+    // only Q_INVOKABLE slots and methods can be call be QMetaObject::invokeMethod()
+    Q_INVOKABLE  void processRequest(void * a_pIsSuccess, void * a_pLoop);
+    bool submitHttpRequest();
     bool isGuiThread();
     bool prepareDataOutput(QString &a_rstrName);
     void clear();
@@ -39,6 +44,7 @@ private:
     QNetworkAccessManager * m_pNetworkAccessMngr;
 
     QThread * m_pBrowserThread;
+    QEventLoop m_oEventLoop;
 };
 
 #endif // CHTTPBROWSERSYNC2_H

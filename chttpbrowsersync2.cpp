@@ -22,13 +22,43 @@ CHttpBrowserSync2::CHttpBrowserSync2(QObject *a_pParent)
 
 CHttpBrowserSync2::~CHttpBrowserSync2()
 {
+    m_oEventLoop.exit(1);
     closeOutput();
     endBrowserThread();
 }
 
-void CHttpBrowserSync2::submitHttpRequest()
+bool CHttpBrowserSync2::startProcessRequest()
 {
     // TO DO
+    bool fResult = false;
+
+    if(isGuiThread() )
+    {
+        qDebug() << "Is a GUI Thread";
+        QMetaObject::invokeMethod(this, "processRequest", Qt::QueuedConnection,
+                                  Q_ARG(void *, &fResult),
+                                  Q_ARG(void *, &m_oEventLoop)
+                                  );
+
+        m_oEventLoop.exec();
+    }
+    else
+    {
+        qDebug() << "Is not a GUI thread";
+        QMetaObject::invokeMethod(this, "processRequest", Qt::BlockingQueuedConnection,
+                                  Q_ARG(void *, &fResult),
+                                  Q_ARG(void *, 0)
+                                  );
+    }
+
+    return fResult;
+}
+
+bool CHttpBrowserSync2::submitHttpRequest()
+{
+    // TO DO
+    qDebug() << "Submit http req url: " << m_oUrl.toString();
+
     bool fResult = !m_oUrl.isEmpty();
 
     if(fResult)
@@ -43,21 +73,71 @@ void CHttpBrowserSync2::submitHttpRequest()
     {
         startHttpRequest();
     }
+
+    return fResult;
 }
 
 void CHttpBrowserSync2::setUrl(const QString &a_crstrUrl)
 {
+    qDebug() << "New url was set: " << a_crstrUrl;
+
     m_oUrl = QUrl(a_crstrUrl);
 }
 
 void CHttpBrowserSync2::downloadFinished()
 {
     // TO DO
+    m_pOutputFile->flush();
+    m_pOutputFile->close();
+
+    QVariant redirectionTarget = m_pReplay->attribute(QNetworkRequest::RedirectionTargetAttribute);
+
+    if(m_pReplay->error() )
+    {
+        qWarning() << "Download fail: " << m_oUrl.toString();
+    }
+    else if(!redirectionTarget.isNull() )
+    {
+        qWarning() << "Rederiection request. HANDLER NOT IMPLEMENTED";
+    }
+    else
+    {
+
+        qDebug() << "Download finished: " << m_oUrl.toString();
+    }
+
+    m_pReplay->deleteLater();
+    m_pReplay = 0;
+    delete m_pOutputFile;
+    m_pOutputFile = 0;
 }
 
 void CHttpBrowserSync2::dataReadyToRead()
 {
-    // TO DO
+    if(0 != m_pOutputFile)
+    {
+        qDebug() << "Data ready to read: " << m_oUrl.toString();
+        m_pOutputFile->write(m_pReplay->readAll() );
+    }
+    else
+    {
+        qWarning("m_pFile == 0");
+    }
+}
+
+void CHttpBrowserSync2::processRequest(void *a_pIsSuccess, void *a_pLoop)
+{
+    bool * pIsSuccess = reinterpret_cast<bool *>(a_pIsSuccess);
+
+    *pIsSuccess = submitHttpRequest();
+
+    if(0 != a_pLoop)
+    {
+        QMetaObject::invokeMethod( reinterpret_cast<QEventLoop *>(a_pLoop)
+                                 , "quit"
+                                 , Qt::QueuedConnection
+                                 );
+    }
 }
 
 bool CHttpBrowserSync2::isGuiThread()
@@ -127,6 +207,7 @@ void CHttpBrowserSync2::closeOutput()
     {
         if(m_pOutputFile->isOpen() )
         {
+            m_pOutputFile->flush();
             m_pOutputFile->close();
         }
 

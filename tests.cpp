@@ -2,6 +2,7 @@
 #include "chttpdatastorage.h"
 #include "chttpbrowser.h"
 #include "cgpsdatastorage.h"
+#include "chttpbrowsersync2.h"
 
 #include <QDebug>
 #include <ctime>
@@ -101,4 +102,13 @@ void unittest_CGpsDataStorage_upload()
     }
 
     oGpsDataStorage.pushData(oHttpDataStorage);
+}
+
+CHttpBrowserSync2 oHttpBrowserSync; // MUSI
+void unittest_CHttpSyncBrowser()
+{
+    const QString strUrl = "http://www.wp.pl";
+
+    oHttpBrowserSync.setUrl(strUrl);
+    oHttpBrowserSync.startProcessRequest();
 }
