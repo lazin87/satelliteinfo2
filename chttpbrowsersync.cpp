@@ -32,7 +32,7 @@ CHttpBrowserSync::~CHttpBrowserSync()
     endBrowserThread();
 }
 
-bool CHttpBrowserSync::startProcessRequest()
+bool CHttpBrowserSync::startProcessRequest(QString &a_strOutFileName)
 {
     // TO DO
     bool fResult = false;
@@ -42,7 +42,8 @@ bool CHttpBrowserSync::startProcessRequest()
         qDebug() << "It is a GUI Thread";
         QMetaObject::invokeMethod(this, "processRequest", Qt::QueuedConnection,
                                   Q_ARG(void *, &fResult),
-                                  Q_ARG(void *, &m_oEventLoop)
+                                  Q_ARG(void *, &m_oEventLoop),
+                                  Q_ARG(void *, &a_strOutFileName)
                                   );
 
         m_oEventLoop.exec();
@@ -52,7 +53,8 @@ bool CHttpBrowserSync::startProcessRequest()
         qDebug() << "It is not a GUI thread";
         QMetaObject::invokeMethod(this, "processRequest", Qt::BlockingQueuedConnection,
                                   Q_ARG(void *, &fResult),
-                                  Q_ARG(void *, 0)
+                                  Q_ARG(void *, 0),
+                                  Q_ARG(void *, &a_strOutFileName)
                                   );
     }
 
@@ -77,17 +79,17 @@ bool CHttpBrowserSync::checkHttpReqParams()
     return fResult;
 }
 
-bool CHttpBrowserSync::submitHttpRequest()
+bool CHttpBrowserSync::submitHttpRequest(QString & a_strOutFileName)
 {
     qDebug() << "Submit http req url: " << m_oUrl.toString();
 
     bool fResult = checkHttpReqParams();
+    QString strFileName = "";
 
     if(fResult)
     {
         QFileInfo fileInfo(m_oUrl.path() );
         //QString strFileName = fileInfo.fileName();
-        QString strFileName = "";
 
         fResult = prepareDataOutput(strFileName);
     }
@@ -98,8 +100,13 @@ bool CHttpBrowserSync::submitHttpRequest()
 
     if(fResult)
     {
+        a_strOutFileName = strFileName;
         startHttpRequest(m_eHttpReq);
         fResult = waitEndOfProccessing(iWAIT_TIMEOUTMS);
+    }
+    else
+    {
+        a_strOutFileName = "";
     }
 
     return fResult;
@@ -161,11 +168,12 @@ void CHttpBrowserSync::waitTimeout()
     emit signalReadTimeout();
 }
 
-void CHttpBrowserSync::processRequest(void *a_pIsSuccess, void *a_pLoop)
+void CHttpBrowserSync::processRequest(void *a_pIsSuccess, void *a_pLoop, void * a_strOutFileName)
 {
     bool * pIsSuccess = reinterpret_cast<bool *>(a_pIsSuccess);
+    QString * strOutFileName = reinterpret_cast<QString *>(a_strOutFileName);
 
-    *pIsSuccess = submitHttpRequest();
+    *pIsSuccess = submitHttpRequest(*strOutFileName);
 
     if(0 != a_pLoop)
     {
@@ -251,10 +259,9 @@ bool CHttpBrowserSync::prepareDataOutput(QString &a_rstrName)
 
     if(a_rstrName.isEmpty() )
     {
-        QString strDate = QDateTime::currentDateTime().toString();
-        strDate = strDate.simplified();
-        strDate = strDate.replace(' ', "_");
-        strDate = strDate.replace(':', "");
+        const QString strDataFormat("ddMMyyyy_hhmmss_zzz");
+
+        QString strDate = QDateTime::currentDateTime().toString(strDataFormat);
 
         a_rstrName = "result_" + strDate + ".txt";
         qWarning() << "Filename is empty. Gen filename: " << a_rstrName;

@@ -26,10 +26,14 @@ void CHttpDataStorage::push(IData const & a_crData)
         postParamList.append(postParam);
     }
 
+    QString test;
+
     m_pHttpBrowser->setUrl(strTARGET_URL);
     m_pHttpBrowser->setEHttpReq(CHttpBrowserSync::eHttpReqPOST);
     m_pHttpBrowser->setHttpParams(postParamList);
-    m_pHttpBrowser->startProcessRequest();
+    m_pHttpBrowser->startProcessRequest(test);
+
+    qDebug() << "filename from http: " << test;
 }
 
 void CHttpDataStorage::pull(QVector<IData> &a_rData)

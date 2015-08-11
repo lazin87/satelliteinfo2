@@ -35,7 +35,7 @@ public:
     void setHttpParams(const PostParamsList_t &a_ParamsList);
     EHttpRequestType eHttpReq() const;
 
-    bool startProcessRequest();
+    bool startProcessRequest(QString & a_strOutFileName);
 
 private slots:
     void downloadFinished();
@@ -47,9 +47,9 @@ signals:
 
 private:
     // only Q_INVOKABLE slots and methods can be call be QMetaObject::invokeMethod()
-    Q_INVOKABLE  void processRequest(void * a_pIsSuccess, void * a_pLoop);
+    Q_INVOKABLE  void processRequest(void * a_pIsSuccess, void * a_pLoop, void *a_strOutFileName);
     bool waitEndOfProccessing(int a_iTimeout);
-    bool submitHttpRequest();
+    bool submitHttpRequest(QString &a_strOutFileName);
     bool isGuiThread();
     bool prepareDataOutput(QString &a_rstrName);
     void clear();

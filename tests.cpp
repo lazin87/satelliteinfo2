@@ -115,10 +115,13 @@ void unittest_CHttpSyncBrowserGET()
     for(int i = 0; iIterations > i; ++i)
     {
         qDebug() << "oHttpBrowserSync iter: " << i;
+        QString outFileName;
 
         oHttpBrowserSync.setUrl(strUrl);
         oHttpBrowserSync.setEHttpReq(CHttpBrowserSync::eHttpReqGET);
-        oHttpBrowserSync.startProcessRequest();
+        oHttpBrowserSync.startProcessRequest(outFileName);
+
+        qDebug() << "out filename: " << outFileName;
     }
 }
 
@@ -136,11 +139,14 @@ void unittest_CHttpSyncBrowserPOST()
     for(int i = 0; iIterations > i; ++i)
     {
         qDebug() << "oHttpBrowserSyncPOST iter: " << i;
+        QString outFileName;
 
         oHttpBrowserSync.setUrl(strUrl);
         oHttpBrowserSync.setEHttpReq(CHttpBrowserSync::eHttpReqPOST);
         oHttpBrowserSync.setHttpParams(params);
-        oHttpBrowserSync.startProcessRequest();
+        oHttpBrowserSync.startProcessRequest(outFileName);
+
+        qDebug() << "out filename: " << outFileName;
     }
 }
 
