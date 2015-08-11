@@ -114,7 +114,6 @@ void CHttpBrowserSync2::setUrl(const QString &a_crstrUrl)
 
 void CHttpBrowserSync2::downloadFinished()
 {
-    // TO DO
     m_pOutputFile->flush();
     m_pOutputFile->close();
 
@@ -267,7 +266,7 @@ bool CHttpBrowserSync2::prepareDataOutput(QString &a_rstrName)
         QFile::remove(a_rstrName);
     }
 
-    closeOutput(); // zastanowic czy nie przeniesc do clear albo reset()
+    closeOutput();
 
     m_pOutputFile = new QFile(a_rstrName);
 
@@ -287,7 +286,6 @@ bool CHttpBrowserSync2::prepareDataOutput(QString &a_rstrName)
 
 void CHttpBrowserSync2::clear()
 {
-    // TO DO
     m_oUrl = QUrl();
 
     // clear network replay
@@ -331,7 +329,6 @@ void CHttpBrowserSync2::startHttpRequest(EHttpRequestType a_eHttpReqType)
     }
     else if(eHttpReqPOST == a_eHttpReqType)
     {
-        qDebug() << "POST QUERY: " << m_urlDataQuery.toString(QUrl::FullyEncoded).toUtf8();
         m_pReplay = m_pNetworkAccessMngr->post(oRequest, m_urlDataQuery.toString(QUrl::FullyEncoded).toUtf8() );
     }
     else
