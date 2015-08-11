@@ -8,6 +8,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QTimer>
+#include <QDateTime>
 
 CHttpBrowserSync2::CHttpBrowserSync2(QObject *a_pParent)
     : QObject(a_pParent)
@@ -15,8 +16,8 @@ CHttpBrowserSync2::CHttpBrowserSync2(QObject *a_pParent)
     , m_pOutputFile(0)
     , m_pReplay(0)
     , m_pBrowserThread(0)
-   // , m_pWaitForDataTimer(0)
     , m_fTimeout(false)
+    , m_eHttpReq(eHttpReqINVALID)
 {
     m_pNetworkAccessMngr = new QNetworkAccessManager(this);
 
@@ -58,24 +59,46 @@ bool CHttpBrowserSync2::startProcessRequest()
     return fResult;
 }
 
+bool CHttpBrowserSync2::checkHttpReqParams()
+{
+    qDebug() << "Check http req params";
+    bool fResult = !m_oUrl.isEmpty();
+    qDebug() << "Url: " << (fResult ? "OK" : "NOK");
+
+    fResult = (eHttpReqINVALID != m_eHttpReq) ? fResult : false;
+    qDebug() << "Req type: " << (fResult ? "OK" : "NOK");
+
+    if(fResult && (eHttpReqPOST == m_eHttpReq) )
+    {
+        fResult = !m_urlDataQuery.isEmpty();
+        qDebug() << "Data query: " << (fResult ? "OK" : "NOK");
+    }
+
+    return fResult;
+}
+
 bool CHttpBrowserSync2::submitHttpRequest()
 {
-    // TO DO
     qDebug() << "Submit http req url: " << m_oUrl.toString();
 
-    bool fResult = !m_oUrl.isEmpty();
+    bool fResult = checkHttpReqParams();
 
     if(fResult)
     {
         QFileInfo fileInfo(m_oUrl.path() );
-        QString strFileName = fileInfo.fileName();
+        //QString strFileName = fileInfo.fileName();
+        QString strFileName = "";
 
         fResult = prepareDataOutput(strFileName);
+    }
+    else
+    {
+        qWarning() << "Invalid http req params";
     }
 
     if(fResult)
     {
-        startHttpRequest();
+        startHttpRequest(m_eHttpReq);
         fResult = waitEndOfProccessing(iWAIT_TIMEOUTMS);
     }
 
@@ -229,8 +252,13 @@ bool CHttpBrowserSync2::prepareDataOutput(QString &a_rstrName)
 
     if(a_rstrName.isEmpty() )
     {
-        qWarning() << "Filename is empty";
-        a_rstrName = "result.txt";
+        QString strDate = QDateTime::currentDateTime().toString();
+        strDate = strDate.simplified();
+        strDate = strDate.replace(' ', "_");
+        strDate = strDate.replace(':', "");
+
+        a_rstrName = "result_" + strDate + ".txt";
+        qWarning() << "Filename is empty. Gen filename: " << a_rstrName;
     }
 
     if(QFile::exists(a_rstrName) )
@@ -268,6 +296,9 @@ void CHttpBrowserSync2::clear()
         m_pReplay->deleteLater();
         m_pReplay = 0;
     }
+
+    m_eHttpReq = eHttpReqINVALID;
+    m_urlDataQuery.clear();
 }
 
 void CHttpBrowserSync2::closeOutput()
@@ -285,15 +316,28 @@ void CHttpBrowserSync2::closeOutput()
     }
 }
 
-void CHttpBrowserSync2::startHttpRequest()
+void CHttpBrowserSync2::startHttpRequest(EHttpRequestType a_eHttpReqType)
 {
     qDebug() << "Start httpRequest";
 
     QNetworkRequest oRequest(m_oUrl);
 
+
     oRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
-    m_pReplay = m_pNetworkAccessMngr->get(oRequest);
+    if(eHttpReqGET == a_eHttpReqType)
+    {
+        m_pReplay = m_pNetworkAccessMngr->get(oRequest);
+    }
+    else if(eHttpReqPOST == a_eHttpReqType)
+    {
+        qDebug() << "POST QUERY: " << m_urlDataQuery.toString(QUrl::FullyEncoded).toUtf8();
+        m_pReplay = m_pNetworkAccessMngr->post(oRequest, m_urlDataQuery.toString(QUrl::FullyEncoded).toUtf8() );
+    }
+    else
+    {
+        qWarning() << "INVALID HTTP REQ TYPE";
+    }
 
     connect( m_pReplay, SIGNAL(readyRead() )
            , this, SLOT(dataReadyToRead() )
@@ -324,4 +368,31 @@ void CHttpBrowserSync2::endBrowserThread()
         m_pBrowserThread = 0;
     }
 }
+CHttpBrowserSync2::EHttpRequestType CHttpBrowserSync2::eHttpReq() const
+{
+    return m_eHttpReq;
+}
+
+void CHttpBrowserSync2::setEHttpReq(const EHttpRequestType &eHttpReq)
+{
+    m_eHttpReq = eHttpReq;
+}
+
+void CHttpBrowserSync2::setHttpParams(const PostParamsList_t &a_ParamsList)
+{
+    if(!m_urlDataQuery.isEmpty() )
+    {
+        qDebug("Params list cleared()");
+        m_urlDataQuery.clear();
+    }
+    qDebug() << "Params:";
+    foreach(PostParam_t param, a_ParamsList)
+    {
+        qDebug() << "First: " << param.first
+                 << "Second: " << param.second;
+
+        m_urlDataQuery.addQueryItem(param.first, param.second);
+    }
+}
+
 

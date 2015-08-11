@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
    // unittest_CSqlDataStorage();
    // unittest_CGpsDataStorage_upload();
 
-    unittest_CHttpSyncBrowser();
+  //  unittest_CHttpSyncBrowserGET();
+    unittest_CHttpSyncBrowserPOST();
 
     return app.exec();
 

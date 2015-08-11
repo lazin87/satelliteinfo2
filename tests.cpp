@@ -104,7 +104,7 @@ void unittest_CGpsDataStorage_upload()
     oGpsDataStorage.pushData(oHttpDataStorage);
 }
 
-void unittest_CHttpSyncBrowser()
+void unittest_CHttpSyncBrowserGET()
 {
     const QString strUrl = "http://www.wp.pl";
     const int iIterations = 10;
@@ -115,6 +115,30 @@ void unittest_CHttpSyncBrowser()
         qDebug() << "oHttpBrowserSync iter: " << i;
 
         oHttpBrowserSync.setUrl(strUrl);
+        oHttpBrowserSync.setEHttpReq(CHttpBrowserSync2::eHttpReqGET);
         oHttpBrowserSync.startProcessRequest();
     }
 }
+
+void unittest_CHttpSyncBrowserPOST()
+{
+    const QString strUrl = "http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi";
+    const int iIterations = 10;
+    PostParamsList_t params;
+    CHttpBrowserSync2 oHttpBrowserSync;
+
+    params.append(qMakePair(QString("box"), QString("yes") ) );
+    params.append(qMakePair(QString("hidden field"), QString("hidden test") ) );
+    params.append(qMakePair(QString("Comments"), QString("to sa komentarze") ) );
+
+    for(int i = 0; iIterations > i; ++i)
+    {
+        qDebug() << "oHttpBrowserSyncPOST iter: " << i;
+
+        oHttpBrowserSync.setUrl(strUrl);
+        oHttpBrowserSync.setEHttpReq(CHttpBrowserSync2::eHttpReqPOST);
+        oHttpBrowserSync.setHttpParams(params);
+        oHttpBrowserSync.startProcessRequest();
+    }
+}
+

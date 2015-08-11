@@ -4,11 +4,15 @@
 #include <QObject>
 #include <QUrl>
 #include <QEventLoop>
+#include <QUrlQuery>
 
 class QFile;
 class QNetworkReply;
 class QNetworkAccessManager;
 class QTimer;
+
+using PostParam_t = QPair<QString, QString>;
+using PostParamsList_t = QVector<PostParam_t>;
 
 class CHttpBrowserSync2 : public QObject
 {
@@ -16,14 +20,22 @@ class CHttpBrowserSync2 : public QObject
 
 public:
     const int iWAIT_TIMEOUTMS = 1000;
+    enum EHttpRequestType
+    {
+        eHttpReqINVALID,
+        eHttpReqGET,
+        eHttpReqPOST
+    };
 
     CHttpBrowserSync2(QObject * a_pParent = 0);
     ~CHttpBrowserSync2();
 
-    bool startProcessRequest();
-    void setHttpParams();
     void setUrl(const QString &a_crstrUrl);
+    void setEHttpReq(const EHttpRequestType &eHttpReq);
+    void setHttpParams(const PostParamsList_t &a_ParamsList);
+    EHttpRequestType eHttpReq() const;
 
+    bool startProcessRequest();
 
 private slots:
     void downloadFinished();
@@ -42,9 +54,10 @@ private:
     bool prepareDataOutput(QString &a_rstrName);
     void clear();
     void closeOutput();
-    void startHttpRequest();
+    void startHttpRequest(EHttpRequestType a_eHttpReqType = eHttpReqGET);
     void startBrowserThread();
     void endBrowserThread();
+    bool checkHttpReqParams();
 
     QUrl m_oUrl;
     QFile * m_pOutputFile;
@@ -55,6 +68,8 @@ private:
     QEventLoop m_oEventLoop;
 
     bool m_fTimeout;
+    EHttpRequestType m_eHttpReq;
+    QUrlQuery m_urlDataQuery;
 };
 
 #endif // CHTTPBROWSERSYNC2_H
