@@ -6,6 +6,7 @@
 #include <QQmlParserStatus>
 
 #include <QGeoPositionInfo>
+#include "cgpspositiondata.h"
 
 QT_FORWARD_DECLARE_CLASS (QGeoPositionInfoSource)
 QT_FORWARD_DECLARE_CLASS (QTimer)
@@ -30,6 +31,7 @@ public:
     double longitude() const;
     double latitude() const;
     double altitude() const;
+    CGpsPositionData getGpsPosData() const;
 
     //From QQmlParserStatus
     void classBegin();
@@ -43,9 +45,7 @@ private slots:
     void generateDemoPosition();
 
 private:
-    double m_dLongitude;
-    double m_dLatitude;
-    double m_dAltitude;
+    CGpsPositionData m_oGpsPosData;
     QString m_strSoruceName;
     QString m_strPositioningMethod;
     QGeoPositionInfoSource * m_pGeoPositionSrc;

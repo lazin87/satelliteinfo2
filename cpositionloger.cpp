@@ -5,7 +5,7 @@
 #include "cgpsdatastorage.h"
 #include "chttpdatastorage.h"
 
-CPositionLoger::CPositionLoger(QObject * a_pParent = 0)
+CPositionLoger::CPositionLoger(QObject * a_pParent)
     : m_pGpsPosProvider(0)
     , m_pLocalDataStorage(0)
     , m_pRemoteDataStorage(0)
@@ -31,6 +31,7 @@ CPositionLoger::~CPositionLoger()
 void CPositionLoger::newPositionDataReady()
 {
     // TO DO
+    m_pLocalDataStorage->commitData(m_pGpsPosProvider->getGpsPosData() ); //COMPILATION ERROR
 }
 
 void CPositionLoger::initMembers()

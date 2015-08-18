@@ -7,9 +7,6 @@
 
 CGpsPositionProvider::CGpsPositionProvider(QObject *a_pParent)
     : QObject(a_pParent)
-    , m_dLongitude(0.0)
-    , m_dLatitude(0.0)
-    , m_dAltitude(0.0)
     , m_strSoruceName("")
     , m_strPositioningMethod("")
     , m_pGeoPositionSrc(0)
@@ -77,17 +74,22 @@ void CGpsPositionProvider::stop()
 
 double CGpsPositionProvider::longitude() const
 {
-    return m_dLongitude;
+    return m_oGpsPosData.get(CGpsPositionData::LONGITUDE);
 }
 
 double CGpsPositionProvider::latitude() const
 {
-    return m_dLatitude;
+    return m_oGpsPosData.get(CGpsPositionData::LATITUDE);
 }
 
 double CGpsPositionProvider::altitude() const
 {
-    return m_dAltitude;
+    return m_oGpsPosData.get(CGpsPositionData::ALTITIUDE);
+}
+
+CGpsPositionData CGpsPositionProvider::getGpsPosData() const
+{
+    return m_oGpsPosData;
 }
 
 void CGpsPositionProvider::classBegin()
@@ -104,9 +106,10 @@ void CGpsPositionProvider::updatePosition(const QGeoPositionInfo &a_rGeoPosInfo)
 {
     if(a_rGeoPosInfo.isValid() )
     {
-        m_dAltitude = a_rGeoPosInfo.coordinate().altitude();
-        m_dLongitude = a_rGeoPosInfo.coordinate().longitude();
-        m_dLatitude = a_rGeoPosInfo.coordinate().latitude();
+        m_oGpsPosData.set(CGpsPositionData::LONGITUDE, a_rGeoPosInfo.coordinate().longitude() );
+        m_oGpsPosData.set(CGpsPositionData::LATITUDE, a_rGeoPosInfo.coordinate().latitude() );
+        m_oGpsPosData.set(CGpsPositionData::ALTITIUDE, a_rGeoPosInfo.coordinate().altitude() );
+        m_oGpsPosData.set(CGpsPositionData::TIMESTAMP, 0.0);
 
         emit positionChanged();
     }
@@ -116,13 +119,12 @@ void CGpsPositionProvider::generateDemoPosition()
 {
     std::srand(std::time(0) );
 
-    m_dAltitude = static_cast<double>(std::rand() % 10000);
-    m_dLongitude = static_cast<double>( (std::rand() % 360) - 180 );
-    m_dLatitude = static_cast<double>( (std::rand() % 180) - 90 );
+    m_oGpsPosData.set(CGpsPositionData::LONGITUDE, static_cast<double>( (std::rand() % 360) - 180 ) );
+    m_oGpsPosData.set(CGpsPositionData::LATITUDE, static_cast<double>( (std::rand() % 180) - 90 ) );
+    m_oGpsPosData.set(CGpsPositionData::ALTITIUDE, static_cast<double>(std::rand() % 10000) );
+    m_oGpsPosData.set(CGpsPositionData::TIMESTAMP, 0.0);
 
-    qWarning() << "Alt: " << m_dAltitude << " "
-               << "Long: " << m_dLongitude << " "
-               << "Lat: " << m_dLatitude;
+    qWarning() << m_oGpsPosData;
 
     emit positionChanged();
 }

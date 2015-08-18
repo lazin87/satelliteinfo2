@@ -9,7 +9,7 @@ const QString CGpsPositionData::s_astrCOLUMNS_NAMES[CGpsPositionData::GPS_DATA_C
 CGpsPositionData::CGpsPositionData()
     : IData()
 {
-
+     std::fill_n(m_aData, CGpsPositionData::GPS_DATA_COUNT, 0);
 }
 
 CGpsPositionData::~CGpsPositionData()
@@ -79,4 +79,26 @@ double CGpsPositionData::get(int a_iColumn) const
 int CGpsPositionData::count() const
 {
     return static_cast<int>(GPS_DATA_COUNT);
+}
+
+
+std::ostream &operator<<(std::ostream &a_rOstream, const CGpsPositionData &a_crGpsPosData)
+{
+    a_rOstream << "Timestamp: " << a_crGpsPosData.m_aData[CGpsPositionData::TIMESTAMP]
+               << " Long: " << a_crGpsPosData.m_aData[CGpsPositionData::LATITUDE]
+               << " Lat: " << a_crGpsPosData.m_aData[CGpsPositionData::LATITUDE]
+               << " Alt: " << a_crGpsPosData.m_aData[CGpsPositionData::ALTITIUDE];
+
+    return a_rOstream;
+}
+
+
+QDebug operator<<(QDebug a_oQDebug, const CGpsPositionData &a_crGpsPosData)
+{
+    a_oQDebug << "Timestamp: " << a_crGpsPosData.m_aData[CGpsPositionData::TIMESTAMP]
+               << " Long: " << a_crGpsPosData.m_aData[CGpsPositionData::LATITUDE]
+               << " Lat: " << a_crGpsPosData.m_aData[CGpsPositionData::LATITUDE]
+               << " Alt: " << a_crGpsPosData.m_aData[CGpsPositionData::ALTITIUDE];
+
+    return a_oQDebug;
 }

@@ -3,6 +3,7 @@
 
 #include "idata.h"
 #include <QString>
+#include <QDebug>
 
 class CGpsPositionData : public IData
 {
@@ -32,6 +33,12 @@ public:
 private:
     static const QString s_astrCOLUMNS_NAMES[GPS_DATA_COUNT];// = {"TIMESTAMP", "LONGITUDE", "LATITUDE", "ALTITIUDE"};
     double m_aData[GPS_DATA_COUNT];// = {0};
+
+    friend std::ostream & operator<<(std::ostream & , const CGpsPositionData &);
+    friend QDebug operator<< (QDebug a_oQDebug, const CGpsPositionData & a_crGpsPosData);
 };
 
 #endif // CGPSPOSITIONDATA_H
+
+std::ostream & operator<<(std::ostream& a_rOstream, const CGpsPositionData & a_crGpsPosData);
+QDebug operator<< (QDebug a_oQDebug, const CGpsPositionData & a_crGpsPosData);
