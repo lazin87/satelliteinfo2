@@ -4,7 +4,7 @@
 #include <QObject>
 #include <chttpbrowsersync.h>
 
-class ILocalDataStorage;
+class CGpsDataStorage;
 class IRemoteDataStorage;
 class CGpsPositionProvider;
 
@@ -24,7 +24,7 @@ private:
     void deleteMembers();
 
     CGpsPositionProvider * m_pGpsPosProvider;
-    ILocalDataStorage * m_pLocalDataStorage;
+    CGpsDataStorage * m_pLocalDataStorage;
     IRemoteDataStorage * m_pRemoteDataStorage;
 
     CHttpBrowserSync m_oHttpBrowser;

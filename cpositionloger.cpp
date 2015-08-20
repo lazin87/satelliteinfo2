@@ -31,7 +31,7 @@ CPositionLoger::~CPositionLoger()
 void CPositionLoger::newPositionDataReady()
 {
     // TO DO
-    m_pLocalDataStorage->commitData(m_pGpsPosProvider->getGpsPosData() ); //COMPILATION ERROR
+    m_pLocalDataStorage->commitData(m_pGpsPosProvider->getGpsPosData() );
 }
 
 void CPositionLoger::initMembers()

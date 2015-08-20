@@ -20,6 +20,8 @@ public:
     virtual bool pushData(IRemoteDataStorage & m_crRemoteDataStorage) = 0;
     virtual bool pullData(IRemoteDataStorage const & m_crRemoteDataStorage) = 0;
     virtual ELocalDataStorageSts status() const = 0;
+    virtual int count() const = 0;
+    virtual bool isEmpty() const = 0;
 };
 
 #endif // IDATASTORAGE_H
