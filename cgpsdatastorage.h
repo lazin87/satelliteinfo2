@@ -27,6 +27,7 @@ public:
     virtual bool isEmpty() const;
 
 signals:
+    void isFull();
 
 public slots:
 
